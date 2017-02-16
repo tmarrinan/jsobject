@@ -29,7 +29,8 @@ int main(int argc, char **argv) {
     jsobject obj;
     obj["name"] = "tmarrinan";
     obj["year"] = 2017;
-    obj["contact"] = *jsobject::parse("{\"phone\":\"999-999-9999\",\"email\":\"me@abc123.com\"}");
+    obj["contact"] = *jsobject::parse("{\"phone\":[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\"}");
+    obj["empty"] = (void*)NULL;
     obj["half"] = 0.5;
 
     std::cout << obj.stringify(true) << std::endl;
@@ -38,8 +39,12 @@ int main(int argc, char **argv) {
     {
         "contact": {
             "email": "me@abc123.com",
-            "phone": "999-999-9999"
+            "phone": [
+                "999-999-9999",
+                "012-345-6789"
+            ]
         },
+        "empty": null,
         "half": 0.5,
         "name": "tmarrinan",
         "year": 2017

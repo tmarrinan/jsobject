@@ -11,13 +11,14 @@ int main(int argc, char **argv) {
 	jsarray &phones = obj["contact"]["phones"];
 	phones.append((void*)NULL);
 	phones.append(false);
-	phones.append(3.14159);
+	obj["contact"]["phones"].append(3.14159);
 
 	obj["nothing"] = (void*)NULL;
 
 	bool hasEmail = obj["contact"].hasProperty("email");
 	bool hasFax = obj["contact"].hasProperty("fax");
-	std::cout << "has email? " << hasEmail << ", has fax? " << hasFax << std::endl;
+	std::cout << "'contact' has email? " << hasEmail << ", has fax? " << hasFax << std::endl;
+	std::cout << "'contact' number of phones? " << phones.length() << std::endl;
 
 	std::cout << obj.stringify(true) << std::endl;
 	
