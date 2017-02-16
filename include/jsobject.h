@@ -112,6 +112,7 @@ public:
 	void append(void *value);
 	size_t length();
 	std::vector<std::string> keys();
+	bool hasProperty(std::string key);
 	std::string stringify(bool pretty = false, int indent = 0);
 };
 
@@ -164,6 +165,7 @@ public:
 	jsvar& operator[](std::string key);
 
 	std::vector<std::string> keys();
+	bool hasProperty(std::string key);
 	std::string stringify(bool pretty = false, int indent = 0);
 
 	static jsobject* parse(std::string json, size_t *headPtr = NULL);

@@ -13,6 +13,12 @@ int main(int argc, char **argv) {
 	phones.append(false);
 	phones.append(3.14159);
 
+	obj["nothing"] = (void*)NULL;
+
+	bool hasEmail = obj["contact"].hasProperty("email");
+	bool hasFax = obj["contact"].hasProperty("fax");
+	std::cout << "has email? " << hasEmail << ", has fax? " << hasFax << std::endl;
+
 	std::cout << obj.stringify(true) << std::endl;
 	
 	return 0;

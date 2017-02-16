@@ -611,6 +611,14 @@ std::vector<std::string> jsvar::keys() {
 	return object->keys();
 }
 
+bool jsvar::hasProperty(std::string key) {
+	if (type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type object\n");
+		exit(1);
+	}
+	return object->hasProperty(key);
+}
+
 std::string jsvar::stringify(bool pretty, int indent) {
 	if (type != JS_TYPE_ARRAY && type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type array/object\n");
@@ -951,6 +959,12 @@ std::vector<std::string> jsobject::keys() {
 			result.push_back(it->first);
 	}
 	return result;
+}
+
+bool jsobject::hasProperty(std::string key) {
+	if (dict.count(key) > 0)
+		return true;
+	return false;
 }
 
 std::string jsobject::stringify(bool pretty, int indent) {
