@@ -715,6 +715,21 @@ std::string jsarray::stringify(bool pretty, int indent) {
 jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
+
+	std::string comment = json.substr(head, 2);
+	while (comment == "//" || comment == "/*") {
+		if (comment == "//")
+			head = json.find("\n", head) + 1;
+		else
+			head = json.find("*/", head) + 2;
+		if (head == std::string::npos) {
+			fprintf(stderr, "Error parsing JSON\n");
+			return NULL;
+		}
+		head = json.find_first_not_of(" \t\r\n", head);
+		comment = json.substr(head, 2);
+	}
+
 	if (json[head] != '[') {
 		fprintf(stderr, "Error parsing JSON\n");
 		return NULL;
@@ -727,6 +742,21 @@ jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 	long long hnum;
 	size_t pos, start, dot, hex, escape;
 	while (json[head] != ']') {
+		// ignore comments
+		comment = json.substr(head, 2);
+		while (comment == "//" || comment == "/*") {
+			if (comment == "//")
+				head = json.find("\n", head) + 1;
+			else
+				head = json.find("*/", head) + 2;
+			if (head == std::string::npos) {
+				fprintf(stderr, "Error parsing JSON\n");
+				return NULL;
+			}
+			head = json.find_first_not_of(" \t\r\n", head);
+			comment = json.substr(head, 2);
+		}
+
 		// determine value type
 		// boolean
 		if (json[head] == 't' || json[head] == 'f') {
@@ -820,6 +850,22 @@ jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 			arrptr->append(*nobj);
 		}
 
+		// ignore comments
+		head = json.find_first_not_of(" \t\r\n", head);
+		comment = json.substr(head, 2);
+		while (comment == "//" || comment == "/*") {
+			if (comment == "//")
+				head = json.find("\n", head) + 1;
+			else
+				head = json.find("*/", head) + 2;
+			if (head == std::string::npos) {
+				fprintf(stderr, "Error parsing JSON\n");
+				return NULL;
+			}
+			head = json.find_first_not_of(" \t\r\n", head);
+			comment = json.substr(head, 2);
+		}
+
 		head = json.find_first_not_of(", \t\r\n", head);
 	}
 
@@ -907,6 +953,21 @@ std::string jsobject::stringify(bool pretty, int indent) {
 jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
+
+	std::string comment = json.substr(head, 2);
+	while (comment == "//" || comment == "/*") {
+		if (comment == "//")
+			head = json.find("\n", head) + 1;
+		else
+			head = json.find("*/", head) + 2;
+		if (head == std::string::npos) {
+			fprintf(stderr, "Error parsing JSON\n");
+			return NULL;
+		}
+		head = json.find_first_not_of(" \t\r\n", head);
+		comment = json.substr(head, 2);
+	}
+
 	if (json[head] != '{') {
 		fprintf(stderr, "Error parsing JSON\n");
 		return NULL;
@@ -919,6 +980,21 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 	long long hnum;
 	size_t pos, start, dot, hex, escape;
 	while (json[head] != '}') {
+		// ignore comments
+		comment = json.substr(head, 2);
+		while (comment == "//" || comment == "/*") {
+			if (comment == "//")
+				head = json.find("\n", head) + 1;
+			else
+				head = json.find("*/", head) + 2;
+			if (head == std::string::npos) {
+				fprintf(stderr, "Error parsing JSON\n");
+				return NULL;
+			}
+			head = json.find_first_not_of(" \t\r\n", head);
+			comment = json.substr(head, 2);
+		}
+
 		// get key
 		if (json[head] == '\"' || json[head] == '\'') {
 			start = 1;
@@ -1043,6 +1119,22 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 		else if (json[head] == '{') {
 			jsobject *nobj = parse(json, &head);
 			(*objptr)[key] = *nobj;
+		}
+
+		// ignore comments
+		head = json.find_first_not_of(" \t\r\n", head);
+		comment = json.substr(head, 2);
+		while (comment == "//" || comment == "/*") {
+			if (comment == "//")
+				head = json.find("\n", head) + 1;
+			else
+				head = json.find("*/", head) + 2;
+			if (head == std::string::npos) {
+				fprintf(stderr, "Error parsing JSON\n");
+				return NULL;
+			}
+			head = json.find_first_not_of(" \t\r\n", head);
+			comment = json.substr(head, 2);
 		}
 
 		head = json.find_first_not_of(", \t\r\n", head);

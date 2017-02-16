@@ -17,8 +17,8 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 | numbers can begin or end with a decimal point            | Yes                                       |
 | numbers can include Infinity, -Infinity, NaN, and -NaN   | No                                        |
 | numbers can begin with an explicit plus sign             | Yes                                       |
-| allow inline (single-line) comments                      | No                                        |
-| allow block (multi-line) comments                        | No                                        |
+| allow inline (single-line) comments                      | Yes                                       |
+| allow block (multi-line) comments                        | Yes                                       |
 
 ### Example
 ```

@@ -1,4 +1,7 @@
-  {		 
+/*
+  	testing comments
+*/
+{
 	"name": "input",
 	"temperature": 41.2,
 	"pressure": 0.8374652,
