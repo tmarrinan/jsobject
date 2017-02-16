@@ -20,6 +20,16 @@ int main(int argc, char **argv) {
 	o["not_empty"] = true;
 
 	printf("\nmodified:\n%s\n", obj.stringify(true).c_str());
+
+
+
+	jsobject aobj;
+	aobj["name"] = "tmarrinan";
+	aobj["year"] = 2017;
+	aobj["contact"] = *jsobject::parse("{\"phone\":\"999-999-9999\",\"email\":\"me@abc123.com\"}");
+	aobj["half"] = 0.5;
+
+	std::cout << aobj.stringify(true) << std::endl;
 	
 	return 0;
 }
