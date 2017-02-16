@@ -5,6 +5,7 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 * Flexible data types
 * Easy data access using `[]`
 * JSON5 parsing
+
 | JSON5 Feature                                            | Integrated                              |
 |----------------------------------------------------------|-----------------------------------------|
 | quoted, single-quoted, and unquoted object names         | Yes                                     |
