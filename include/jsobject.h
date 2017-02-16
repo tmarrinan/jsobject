@@ -4,12 +4,13 @@
 #include <vector>
 
 #define JS_TYPE_INVALID -1
-#define JS_TYPE_BOOLEAN  0
-#define JS_TYPE_INTEGER  1
-#define JS_TYPE_FLOAT    2
-#define JS_TYPE_TEXT     3
-#define JS_TYPE_ARRAY    4
-#define JS_TYPE_OBJECT   5
+#define JS_TYPE_NULL     0
+#define JS_TYPE_BOOLEAN  1
+#define JS_TYPE_INTEGER  2
+#define JS_TYPE_FLOAT    3
+#define JS_TYPE_TEXT     4
+#define JS_TYPE_ARRAY    5
+#define JS_TYPE_OBJECT   6
 
 class jsarray;
 class jsobject;
@@ -43,6 +44,7 @@ public:
 	jsvar(std::string value);
 	jsvar(jsarray &value);
 	jsvar(jsobject &value);
+	jsvar(void *value);
 	~jsvar() {};
 
 	operator bool();
@@ -79,6 +81,7 @@ public:
 	jsvar& operator=(std::string value);
 	jsvar& operator=(jsarray &value);
 	jsvar& operator=(jsobject &value);
+	jsvar& operator=(void *value);
 
 	jsvar& operator[](int index);
 	jsvar& operator[](size_t index);
@@ -106,7 +109,9 @@ public:
 	void append(std::string value);
 	void append(jsarray &value);
 	void append(jsobject &value);
+	void append(void *value);
 	size_t length();
+	std::vector<std::string> keys();
 	std::string stringify(bool pretty = false, int indent = 0);
 };
 
@@ -139,6 +144,7 @@ public:
 	void append(std::string value);
 	void append(jsarray &value);
 	void append(jsobject &value);
+	void append(void *value);
 
 	size_t length();
 	std::string stringify(bool pretty = false, int indent = 0);

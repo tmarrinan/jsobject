@@ -93,6 +93,14 @@ jsvar::jsvar(jsobject &value) {
 	object = &value;
 }
 
+jsvar::jsvar(void *value) {
+	if (value != NULL) {
+		fprintf(stderr, "Invalid access of jsvar type null\n");
+		exit(1);
+	}
+	type = JS_TYPE_NULL;
+}
+
 jsvar::operator bool() {
 	if (type != JS_TYPE_BOOLEAN) {
 		fprintf(stderr, "Invalid access of jsvar type boolean\n");
@@ -348,6 +356,15 @@ jsvar& jsvar::operator=(jsobject &value) {
 	return *this;
 }
 
+jsvar& jsvar::operator=(void *value) {
+	if (value != NULL) {
+		fprintf(stderr, "Invalid access of jsvar type null\n");
+		exit(1);
+	}
+	type = JS_TYPE_NULL;
+	return *this;
+}
+
 jsvar& jsvar::operator[](int index) {
 	return (*this)[(size_t)index];
 }
@@ -383,6 +400,9 @@ std::string jsvar::toString(bool pretty, int indent) {
 	std::string result = "";
 
 	switch (type) {
+		case JS_TYPE_NULL:
+			result = "null";
+			break;
 		case JS_TYPE_BOOLEAN:
 			if (boolean == true)
 				result = "true";
@@ -567,12 +587,28 @@ void jsvar::append(jsobject &value) {
 	array->append(value);
 }
 
+void jsvar::append(void *value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
 size_t jsvar::length() {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
 	return array->length();
+}
+
+std::vector<std::string> jsvar::keys() {
+	if (type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type object\n");
+		exit(1);
+	}
+	return object->keys();
 }
 
 std::string jsvar::stringify(bool pretty, int indent) {
@@ -674,6 +710,10 @@ void jsarray::append(jsobject &value) {
 	list.push_back(jsvar(value));
 }
 
+void jsarray::append(void *value) {
+	list.push_back(jsvar(value));
+}
+
 size_t jsarray::length() {
 	return list.size();
 }
@@ -758,6 +798,18 @@ jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 		}
 
 		// determine value type
+		// null
+		if (json[head] == 'n') {
+			if (json.substr(head, 4) == "null") {
+				arrptr->append((void*)NULL);
+				head += 4;
+			}
+			else {
+				fprintf(stderr, "Error parsing JSON\n");
+				delete arrptr;
+				return NULL;
+			}
+		}
 		// boolean
 		if (json[head] == 't' || json[head] == 'f') {
 			if (json.substr(head, 4) == "true") {
@@ -1029,6 +1081,18 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 		}
 		// determine value type
 		head = json.find_first_not_of(" \t\r\n", head+1);
+		// null
+		if (json[head] == 'n') {
+			if (json.substr(head, 4) == "null") {
+				(*objptr)[key] = (void*)NULL;
+				head += 4;
+			}
+			else {
+				fprintf(stderr, "Error parsing JSON\n");
+				delete objptr;
+				return NULL;
+			}
+		}
 		// boolean
 		if (json[head] == 't' || json[head] == 'f') {
 			if (json.substr(head, 4) == "true") {
