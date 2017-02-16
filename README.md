@@ -22,23 +22,30 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 
 ### Example
 ```
-jsobject obj;
-obj["name"] = "tmarrinan";
-obj["year"] = 2017;
-obj["contact"] = *jsobject::parse("{\"phone\":\"999-999-9999\",\"email\":\"me@abc123.com\"}");
-aobj["half"] = 0.5;
+#include <iostream>
+#include "jsobject.h"
 
-std::cout << obj.stringify(true) << std::endl;
+int main(int argc, char **argv) {
+    jsobject obj;
+    obj["name"] = "tmarrinan";
+    obj["year"] = 2017;
+    obj["contact"] = *jsobject::parse("{\"phone\":\"999-999-9999\",\"email\":\"me@abc123.com\"}");
+    aobj["half"] = 0.5;
 
-/*** PRINT *************************
-{
-    "contact": {
-        "email": "me@abc123.com",
-        "phone": "999-999-9999"
-    },
-    "half": 0.5,
-    "name": "tmarrinan",
-    "year": 2017
+    std::cout << obj.stringify(true) << std::endl;
+
+    /*** PRINT *************************
+    {
+        "contact": {
+            "email": "me@abc123.com",
+            "phone": "999-999-9999"
+        },
+        "half": 0.5,
+        "name": "tmarrinan",
+        "year": 2017
+    }
+    ************************************/
+
+    return 0;
 }
-************************************/
 ```
