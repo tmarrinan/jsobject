@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     obj["name"] = "tmarrinan";
     obj["year"] = 2017;
     obj["contact"] = *jsobject::parse("{\"phone\":\"999-999-9999\",\"email\":\"me@abc123.com\"}");
-    aobj["half"] = 0.5;
+    obj["half"] = 0.5;
 
     std::cout << obj.stringify(true) << std::endl;
 

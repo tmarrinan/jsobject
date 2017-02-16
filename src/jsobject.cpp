@@ -844,6 +844,17 @@ jsvar& jsobject::operator[](std::string key) {
 	return dict[key];
 }
 
+std::vector<std::string> jsobject::keys() {
+	std::map<std::string,jsvar>::iterator it;
+	std::vector<std::string> result;
+
+	for (it = dict.begin(); it != dict.end(); it++) {
+		if (it->second.getType() != JS_TYPE_INVALID)
+			result.push_back(it->first);
+	}
+	return result;
+}
+
 std::string jsobject::stringify(bool pretty, int indent) {
 	std::map<std::string,jsvar>::iterator it;
 	char pad[128];
@@ -894,19 +905,6 @@ std::string jsobject::stringify(bool pretty, int indent) {
 }
 
 jsobject* jsobject::parse(std::string json, size_t *headPtr) {
-	// TODO: JSON5
-	//  X quoted, single-quoted, and unquoted object names
-	//  X trailing commas in objects and arrays
-	//  X single quoted strings
-	//  \ escape sequences in strings ---> *currently only support quotes*
-	//  - multiline strings (prefix each newline with a backslash)
-	//  X numbers can be hexadecimal (e.g. 0xA639ED01)
-	//  X numbers can begin or end with a decimal point
-	//  - numbers can include Infinity, -Infinity, NaN, and -NaN
-	//  X numbers can begin with an explicit plus sign
-	//  - allow inline (single-line) comments
-	//  - allow block (multi-line) comments
-
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
 	if (json[head] != '{') {

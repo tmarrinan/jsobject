@@ -157,6 +157,7 @@ public:
 	jsvar& operator[](const char *key);
 	jsvar& operator[](std::string key);
 
+	std::vector<std::string> keys();
 	std::string stringify(bool pretty = false, int indent = 0);
 
 	static jsobject* parse(std::string json, size_t *headPtr = NULL);
