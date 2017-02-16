@@ -3,84 +3,160 @@
 #include <string>
 #include <vector>
 
-#define JSON_BOOLEAN 0
-#define JSON_INTEGER 1
-#define JSON_FLOAT   2
-#define JSON_TEXT    3
-#define JSON_ARRAY   4
-#define JSON_OBJECT  5
-
-#define JSON_MODE_INIT 0
-#define JSON_MODE_ARRAY 1
-#define JSON_MODE_OBJECT 2
+#define JS_TYPE_INVALID -1
+#define JS_TYPE_BOOLEAN  0
+#define JS_TYPE_INTEGER  1
+#define JS_TYPE_FLOAT    2
+#define JS_TYPE_TEXT     3
+#define JS_TYPE_ARRAY    4
+#define JS_TYPE_OBJECT   5
 
 class jsarray;
 class jsobject;
 
+class jsvar {
+private:
+	int type;
+	bool boolean;
+	long long inumber;
+	double fnumber;
+	std::string text;
+	jsarray *array;
+	jsobject *object;
+
+public:
+	jsvar();
+	jsvar(bool value);
+	jsvar(char value);
+	jsvar(short value);
+	jsvar(int value);
+	jsvar(long value);
+	jsvar(long long value);
+	jsvar(unsigned char value);
+	jsvar(unsigned short value);
+	jsvar(unsigned int value);
+	jsvar(unsigned long value);
+	jsvar(unsigned long long value);
+	jsvar(float value);
+	jsvar(double value);
+	jsvar(const char *value);
+	jsvar(std::string value);
+	jsvar(jsarray &value);
+	jsvar(jsobject &value);
+	~jsvar() {};
+
+	operator bool();
+	operator char();
+	operator short();
+	operator int();
+	operator long();
+	operator long long();
+	operator unsigned char();
+	operator unsigned short();
+	operator unsigned int();
+	operator unsigned long();
+	operator unsigned long long();
+	operator float();
+	operator double();
+	operator std::string();
+	operator jsarray&();
+	operator jsobject&();
+
+	jsvar& operator=(bool value);
+	jsvar& operator=(char value);
+	jsvar& operator=(short value);
+	jsvar& operator=(int value);
+	jsvar& operator=(long value);
+	jsvar& operator=(long long value);
+	jsvar& operator=(unsigned char value);
+	jsvar& operator=(unsigned short value);
+	jsvar& operator=(unsigned int value);
+	jsvar& operator=(unsigned long value);
+	jsvar& operator=(unsigned long long value);
+	jsvar& operator=(float value);
+	jsvar& operator=(double value);
+	jsvar& operator=(const char *value);
+	jsvar& operator=(std::string value);
+	jsvar& operator=(jsarray &value);
+	jsvar& operator=(jsobject &value);
+
+	jsvar& operator[](int index);
+	jsvar& operator[](size_t index);
+	jsvar& operator[](const char *key);
+	jsvar& operator[](std::string key);
+
+	int getType();
+	std::string toString(bool pretty = false, int indent = 0);
+
+	void append(jsvar &value);
+	void append(bool value);
+	void append(char value);
+	void append(short value);
+	void append(int value);
+	void append(long value);
+	void append(long long value);
+	void append(unsigned char value);
+	void append(unsigned short value);
+	void append(unsigned int value);
+	void append(unsigned long value);
+	void append(unsigned long long value);
+	void append(float value);
+	void append(double value);
+	void append(const char *value);
+	void append(std::string value);
+	void append(jsarray &value);
+	void append(jsobject &value);
+	size_t length();
+	std::string stringify(bool pretty = false, int indent = 0);
+};
+
 class jsarray {
 private:
-	std::vector<std::pair<int,int> > list;
-
-	std::vector<bool>        boolean;
-	std::vector<long long>   inumber;
-	std::vector<double>      fnumber;
-	std::vector<std::string> text;
-	std::vector<jsarray*>    array;
-	std::vector<jsobject*>   object;
+	std::vector<jsvar> list;
 
 public:
 	jsarray() {};
 	~jsarray() {};
 
-	void addBooleanToArray(bool value);
-	void addIntegerToArray(long long value);
-	void addFloatToArray(double value);
-	void addTextToArray(std::string value);
-	void addArrayToArray(jsarray* value);
-	void addObjectToArray(jsobject* value);
+	jsvar& operator[](int index);
+	jsvar& operator[](size_t index);
+
+	void append(jsvar &value);
+	void append(bool value);
+	void append(char value);
+	void append(short value);
+	void append(int value);
+	void append(long value);
+	void append(long long value);
+	void append(unsigned char value);
+	void append(unsigned short value);
+	void append(unsigned int value);
+	void append(unsigned long value);
+	void append(unsigned long long value);
+	void append(float value);
+	void append(double value);
+	void append(const char *value);
+	void append(std::string value);
+	void append(jsarray &value);
+	void append(jsobject &value);
 
 	size_t length();
-	int getElementType(size_t index);
-	bool getElementAsBoolean(size_t index, bool *err = NULL);
-	long long getElementAsInteger(size_t index, bool *err = NULL);
-	double getElementAsFloat(size_t index, bool *err = NULL);
-	std::string getElementAsText(size_t index, bool *err = NULL);
-	jsarray* getElementAsArray(size_t index, bool *err = NULL);
-	jsobject* getElementAsObject(size_t index, bool *err = NULL);
-	
 	std::string stringify(bool pretty = false, int indent = 0);
 
-	static jsarray* parseArray(std::string json, size_t *headPtr = NULL);
+	static jsarray* parse(std::string json, size_t *headPtr = NULL);
 };
 
 class jsobject {
 private:
-	std::map<std::string,bool>        boolean;
-	std::map<std::string,long long>   inumber;
-	std::map<std::string,double>      fnumber;
-	std::map<std::string,std::string> text;
-	std::map<std::string,jsarray*>    array;
-	std::map<std::string,jsobject*>   object;
+	std::map<std::string,jsvar> dict;
 
 public:
 	jsobject() {};
 	~jsobject() {};
 
-	void addBooleanToObject(std::string key, bool value);
-	void addIntegerToObject(std::string key, long long value);
-	void addFloatToObject(std::string key, double value);
-	void addTextToObject(std::string key, std::string value);
-	void addArrayToObject(std::string key, jsarray* value);
-	void addObjectToObject(std::string key, jsobject* value);
+	jsvar& operator[](const char *key);
+	jsvar& operator[](std::string key);
 
-	int getItemType(std::string key);
-	bool getItemAsBoolean(std::string key, bool *err = NULL);
-	long long getItemAsInteger(std::string key, bool *err = NULL);
-	double getItemAsFloat(std::string key, bool *err = NULL);
-	std::string getItemAsText(std::string key, bool *err = NULL);
-	jsarray* getItemAsArray(std::string key, bool *err = NULL);
-	jsobject* getItemAsObject(std::string key, bool *err = NULL);
-	
 	std::string stringify(bool pretty = false, int indent = 0);
 
 	static jsobject* parse(std::string json, size_t *headPtr = NULL);

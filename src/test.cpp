@@ -2,31 +2,24 @@
 #include "jsobject.h"
 
 int main(int argc, char **argv) {
-	// create object manually
-	jsarray *a = new jsarray();
-	a->addFloatToArray(3.14159);
-	a->addIntegerToArray(100);
-	a->addBooleanToArray(false);
-	a->addTextToArray("hello world!");
-
-	jsobject *b = new jsobject();
-	b->addBooleanToObject("is_open", true);
-	b->addTextToObject("location", "here 123");
-	b->addFloatToObject("temperature", -17.5);
-	b->addArrayToObject("my_list", a);
-
-	std::string bjson = b->stringify();
-	printf("JSOBJECT: %s\n", bjson.c_str());
-
-
 	// load object from json file
-	jsobject *c = jsobject::parseFromFile("input.json");
-	std::string cjson = c->stringify(true);
-	printf("\nJSOBJECT:\n%s\n", cjson.c_str());
+	jsobject *objptr = jsobject::parseFromFile("input.json");
+	jsobject obj = *objptr;
 
-	printf("name: %s\n", c->getItemAsText("name").c_str());
-	printf("picture?: %s\n", c->getItemAsArray("attribs")->getElementAsArray(4)->getElementAsText(0).c_str());
-	printf("attribs size: %lu\n", c->getItemAsArray("attribs")->length());
+	printf("\noriginal:\n%s\n", obj.stringify(true).c_str());
 
+
+	// change name, add to attribs inner array
+	obj["name"] = -98989.98989;
+	obj["attribs"][4].append(1000000);
+
+	jsarray &a = obj["attribs"][4];
+	a.append(1000000);
+
+	jsobject &o = obj["attribs"][4][2]["obj"];
+	o["not_empty"] = true;
+
+	printf("\nmodified:\n%s\n", obj.stringify(true).c_str());
+	
 	return 0;
 }

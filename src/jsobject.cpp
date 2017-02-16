@@ -2,185 +2,701 @@
 
 
 /***************************************************************
+ *  public methods: jsvar                                      *
+ ***************************************************************/
+jsvar::jsvar() {
+	type = JS_TYPE_INVALID;
+}
+
+jsvar::jsvar(bool value) {
+	type = JS_TYPE_BOOLEAN;
+	boolean = value;
+}
+
+jsvar::jsvar(char value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(short value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(int value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(long long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = value;
+}
+
+jsvar::jsvar(unsigned char value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(unsigned short value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(unsigned int value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(unsigned long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(unsigned long long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+}
+
+jsvar::jsvar(float value) {
+	type = JS_TYPE_FLOAT;
+	fnumber = (double)value;
+}
+
+jsvar::jsvar(double value) {
+	type = JS_TYPE_FLOAT;
+	fnumber = value;
+}
+
+jsvar::jsvar(const char *value) {
+	type = JS_TYPE_TEXT;
+	text = std::string(value);
+}
+
+jsvar::jsvar(std::string value) {
+	type = JS_TYPE_TEXT;
+	text = value;
+}
+
+jsvar::jsvar(jsarray &value) {
+	type = JS_TYPE_ARRAY;
+	array = &value;
+}
+
+jsvar::jsvar(jsobject &value) {
+	type = JS_TYPE_OBJECT;
+	object = &value;
+}
+
+jsvar::operator bool() {
+	if (type != JS_TYPE_BOOLEAN) {
+		fprintf(stderr, "Invalid access of jsvar type boolean\n");
+		exit(1);
+	}
+	return boolean;
+}
+
+jsvar::operator char() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (char)inumber;
+	return (char)fnumber;
+}
+
+jsvar::operator short() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (short)inumber;
+	return (short)fnumber;
+}
+
+jsvar::operator int() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (int)inumber;
+	return (int)fnumber;
+}
+
+jsvar::operator long() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (long)inumber;
+	return (long)fnumber;
+}
+
+jsvar::operator long long() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return inumber;
+	return (long long)fnumber;
+}
+
+jsvar::operator unsigned char() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (unsigned char)inumber;
+	return (unsigned char)fnumber;
+}
+
+jsvar::operator unsigned short() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (unsigned short)inumber;
+	return (unsigned short)fnumber;
+}
+
+jsvar::operator unsigned int() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (unsigned int)inumber;
+	return (unsigned int)fnumber;
+}
+
+jsvar::operator unsigned long() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (unsigned long)inumber;
+	return (unsigned long)fnumber;
+}
+
+jsvar::operator unsigned long long() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (unsigned long long)inumber;
+	return (unsigned long long)fnumber;
+}
+
+jsvar::operator float() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (float)inumber;
+	printf("conversion to float: %.6f\n", (float)fnumber);
+	return (float)fnumber;
+}
+
+jsvar::operator double() {
+	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
+		fprintf(stderr, "Invalid access of jsvar type number\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_INTEGER)
+		return (double)inumber;
+	return fnumber;
+}
+
+jsvar::operator std::string() {
+	if (type != JS_TYPE_TEXT) {
+		fprintf(stderr, "Invalid access of jsvar type text\n");
+		exit(1);
+	}
+	return text;
+}
+
+jsvar::operator jsarray&() {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	return *array;
+}
+
+jsvar::operator jsobject&() {
+	if (type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type object\n");
+		exit(1);
+	}
+	return *object;
+}
+
+jsvar& jsvar::operator=(bool value) {
+	type = JS_TYPE_BOOLEAN;
+	boolean = value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(char value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(short value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(int value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(long long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(unsigned char value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(unsigned short value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(unsigned int value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(unsigned long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(unsigned long long value) {
+	type = JS_TYPE_INTEGER;
+	inumber = (long long)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(float value) {
+	type = JS_TYPE_FLOAT;
+	fnumber = (double)value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(double value) {
+	type = JS_TYPE_FLOAT;
+	fnumber = value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(const char *value) {
+	type = JS_TYPE_TEXT;
+	text = std::string(value);
+	return *this;
+}
+
+jsvar& jsvar::operator=(std::string value) {
+	type = JS_TYPE_TEXT;
+	text = value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(jsarray &value) {
+	type = JS_TYPE_ARRAY;
+	array = &value;
+	return *this;
+}
+
+jsvar& jsvar::operator=(jsobject &value) {
+	type = JS_TYPE_OBJECT;
+	object = &value;
+	return *this;
+}
+
+jsvar& jsvar::operator[](int index) {
+	return (*this)[(size_t)index];
+}
+
+jsvar& jsvar::operator[](size_t index) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	return (*array)[index];
+}
+
+jsvar& jsvar::operator[](const char *key) {
+	return (*this)[std::string(key)];
+}
+
+jsvar& jsvar::operator[](std::string key) {
+	if (type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type object\n");
+		exit(1);
+	}
+	return (*object)[key];
+}
+
+int jsvar::getType() {
+	return type;
+}
+
+std::string jsvar::toString(bool pretty, int indent) {
+	size_t pos, start, escape;
+	char canum[64];
+	std::string esctext;
+	std::string result = "";
+
+	switch (type) {
+		case JS_TYPE_BOOLEAN:
+			if (boolean == true)
+				result = "true";
+			else
+				result = "false";
+			break;
+		case JS_TYPE_INTEGER:
+			sprintf(canum, "%lld", inumber);
+			result = std::string(canum);
+			break;
+		case JS_TYPE_FLOAT:
+			sprintf(canum, "%.14lf", fnumber);
+			result = std::string(canum);
+			pos = result.find_last_not_of("0");
+			if (pos != std::string::npos)
+				result = result.substr(0, pos+1);
+			if (result[result.length()-1] == '.')
+				result += "0";
+			break;
+		case JS_TYPE_TEXT:
+			esctext = text;
+			start = 0;
+			escape = esctext.find_first_of("\"\'");
+			while (escape != std::string::npos) {
+				esctext = esctext.substr(0, escape) + "\\" + esctext.substr(escape);
+				start = escape + 2;
+				escape = esctext.find_first_of("\"\'", start);
+			}
+			result += "\"" + esctext + "\"";
+			break;
+		case JS_TYPE_ARRAY:
+			result = array->stringify(pretty, indent);
+			break;
+		case JS_TYPE_OBJECT:
+			result = object->stringify(pretty, indent);
+			break;
+	}
+	return result;
+}
+
+void jsvar::append(jsvar &value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(bool value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(char value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(short value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(int value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(long value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(long long value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(unsigned char value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(unsigned short value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(unsigned int value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(unsigned long value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(unsigned long long value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(float value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(double value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(const char *value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(std::string value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(jsarray &value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+void jsvar::append(jsobject &value) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->append(value);
+}
+
+size_t jsvar::length() {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	return array->length();
+}
+
+std::string jsvar::stringify(bool pretty, int indent) {
+	if (type != JS_TYPE_ARRAY && type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type array/object\n");
+		exit(1);
+	}
+	if (type == JS_TYPE_ARRAY)
+		return array->stringify(pretty, indent);
+	return object->stringify(pretty, indent);
+}
+
+
+/***************************************************************
  *  public methods: jsarray                                    *
  ***************************************************************/
 
-void jsarray::addBooleanToArray(bool value) {
-	int idx = boolean.size();
-	list.push_back(std::make_pair(JSON_BOOLEAN, idx));
-	boolean.push_back(value);
+jsvar& jsarray::operator[](int index) {
+	return (*this)[(size_t)index];
 }
 
-void jsarray::addIntegerToArray(long long value) {
-	int idx = inumber.size();
-	list.push_back(std::make_pair(JSON_INTEGER, idx));
-	inumber.push_back(value);
+jsvar& jsarray::operator[](size_t index) {
+	if (index >= list.size()) {
+		fprintf(stderr, "Invalid access of jsarray: index out of bounds\n");
+		exit(1);
+	}
+	return list[index];
 }
 
-void jsarray::addFloatToArray(double value) {
-	int idx = fnumber.size();
-	list.push_back(std::make_pair(JSON_FLOAT, idx));
-	fnumber.push_back(value);
+void jsarray::append(jsvar &value) {
+	list.push_back(value);
 }
 
-void jsarray::addTextToArray(std::string value) {
-	int idx = text.size();
-	list.push_back(std::make_pair(JSON_TEXT, idx));
-	text.push_back(value);
+void jsarray::append(bool value) {
+	list.push_back(jsvar(value));
 }
 
-void jsarray::addArrayToArray(jsarray* value) {
-	int idx = array.size();
-	list.push_back(std::make_pair(JSON_ARRAY, idx));
-	array.push_back(value);
+void jsarray::append(char value) {
+	list.push_back(jsvar(value));
 }
 
-void jsarray::addObjectToArray(jsobject* value) {
-	int idx = object.size();
-	list.push_back(std::make_pair(JSON_OBJECT, idx));
-	object.push_back(value);
+void jsarray::append(short value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(int value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(long value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(long long value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(unsigned char value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(unsigned short value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(unsigned int value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(unsigned long value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(unsigned long long value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(float value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(double value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(const char *value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(std::string value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(jsarray &value) {
+	list.push_back(jsvar(value));
+}
+
+void jsarray::append(jsobject &value) {
+	list.push_back(jsvar(value));
 }
 
 size_t jsarray::length() {
 	return list.size();
 }
 
-int jsarray::getElementType(size_t index) {
-	if (index >= list.size())
-		return -1;
-	return list[index].first;
-}
-
-bool jsarray::getElementAsBoolean(size_t index, bool *err) {
-	if (index >= list.size() || list[index].first != JSON_BOOLEAN) {
-		if (err)
-			*err = true;
-		return false;
-	}
-
-	if (err)
-		*err = false;
-	return boolean[list[index].second];
-}
-
-long long jsarray::getElementAsInteger(size_t index, bool *err) {
-	if (index >= list.size() || list[index].first != JSON_INTEGER) {
-		if (err)
-			*err = true;
-		return 0;
-	}
-
-	if (err)
-		*err = false;
-	return inumber[list[index].second];
-}
-
-double jsarray::getElementAsFloat(size_t index, bool *err) {
-	if (index >= list.size() || list[index].first != JSON_FLOAT) {
-		if (err)
-			*err = true;
-		return 0.0;
-	}
-
-	if (err)
-		*err = false;
-	return fnumber[list[index].second];
-}
-
-std::string jsarray::getElementAsText(size_t index, bool *err) {
-	if (index >= list.size() || list[index].first != JSON_TEXT) {
-		if (err)
-			*err = true;
-		return "";
-	}
-
-	if (err)
-		*err = false;
-	return text[list[index].second];
-}
-
-jsarray* jsarray::getElementAsArray(size_t index, bool *err) {
-	if (index >= list.size() || list[index].first != JSON_ARRAY) {
-		if (err)
-			*err = true;
-		return NULL;
-	}
-
-	if (err)
-		*err = false;
-	return array[list[index].second];
-}
-
-jsobject* jsarray::getElementAsObject(size_t index, bool *err) {
-	if (index >= list.size() || list[index].first != JSON_OBJECT) {
-		if (err)
-			*err = true;
-		return NULL;
-	}
-
-	if (err)
-		*err = false;
-	return object[list[index].second];
-}
-
 std::string jsarray::stringify(bool pretty, int indent) {
-	int i, j;
-	char canum[64];
-	std::string snum;
-	size_t pos, start, escape;
-	char pad[64];
-	std::string padding;
-	std::string esctext;
+	int i;
+	char pad[128];
+	std::string padding = "";
+	std::string ipadding = "";
 	std::string result = "[";
 
 	if (pretty) {
 		sprintf(pad, "%*s", 4*indent, "");
 		padding = std::string(pad);
+		ipadding = padding + "    ";
 	}
 
 	for (i=0; i<list.size(); i++) {
 		if (pretty)
-			result += "\n" + padding + "    ";
-		switch (list[i].first) {
-			case JSON_BOOLEAN:
-				if (boolean[list[i].second] == true)
-					result += "true,";
-				else
-					result += "false,";
-				break;
-			case JSON_INTEGER:
-				sprintf(canum, "%lld", inumber[list[i].second]);
-				result += std::string(canum) + ",";
-				break;
-			case JSON_FLOAT:
-				sprintf(canum, "%.14lf", fnumber[list[i].second]);
-				snum = std::string(canum);
-				pos = snum.find_last_not_of("0");
-				if (pos != std::string::npos)
-					snum = snum.substr(0, pos+1);
-				if (snum[snum.length()-1] == '.')
-					snum += "0";
-				result += snum + ",";
-				break;
-			case JSON_TEXT:
-				esctext = text[list[i].second];
-				start = 0;
-				escape = esctext.find_first_of("\"\'");
-				while (escape != std::string::npos) {
-					esctext = esctext.substr(0, escape) + "\\" + esctext.substr(escape);
-					start = escape + 2;
-					escape = esctext.find_first_of("\"\'", start);
-				}
-				result += "\"" + esctext + "\",";
-				break;
-			case JSON_ARRAY:
-				result += array[list[i].second]->stringify(pretty, indent+1) + ",";
-				break;
-			case JSON_OBJECT:
-				result += object[list[i].second]->stringify(pretty, indent+1) + ",";
-				break;
-		}
+			result += "\n" + ipadding;
+		result += list[i].toString(pretty, indent + 1) + ",";
 	}
+
 	if (list.size() > 0) {
 		if (pretty) {
 			result[result.length()-1] = '\n';
@@ -196,7 +712,7 @@ std::string jsarray::stringify(bool pretty, int indent) {
 	return result;
 }
 
-jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
+jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
 	if (json[head] != '[') {
@@ -204,7 +720,7 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 		return NULL;
 	}
 
-	jsarray* arr = new jsarray();
+	jsarray* arrptr = new jsarray();
 	head = json.find_first_not_of(" \t\r\n", head+1);
 
 	std::string value;
@@ -215,16 +731,16 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 		// boolean
 		if (json[head] == 't' || json[head] == 'f') {
 			if (json.substr(head, 4) == "true") {
-				arr->addBooleanToArray(true);
+				arrptr->append(true);
 				head += 4;
 			}
 			else if (json.substr(head, 5) == "false") {
-				arr->addBooleanToArray(false);
+				arrptr->append(false);
 				head += 5;
 			}
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
-				delete arr;
+				delete arrptr;
 				return NULL;
 			}
 		}
@@ -233,7 +749,7 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 			pos = json.find_first_not_of(".x0123456789ABCDEFabcdef", head+1);
 			if (pos == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
-				delete arr;
+				delete arrptr;
 				return NULL;
 			}
 			value = json.substr(head, pos-head);
@@ -241,31 +757,31 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 			if (hex != std::string::npos) {
 				if ((value.substr(0,2) != "0x" && value.substr(0,3) != "-0x" && value.substr(0,3) != "+0x") || value.find_first_of(".x", hex+1) != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete arr;
+					delete arrptr;
 					return NULL;
 				}
 				sscanf(value.substr(hex+1).c_str(), "%llx", &hnum);
 				if (value[0] == '-')
 					hnum *= -1;
-				arr->addIntegerToArray(hnum);
+				arrptr->append(hnum);
 			}
 			else {
 				if (value.find_first_of("ABCDEFabcdef") != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete arr;
+					delete arrptr;
 					return NULL;
 				}
 				dot = value.find(".");
 				if (dot == std::string::npos) {
-					arr->addIntegerToArray(atoll(value.c_str()));
+					arrptr->append(atoll(value.c_str()));
 				}
 				else {
 					if (value.find(".", dot + 1) != std::string::npos) {
 						fprintf(stderr, "Error parsing JSON\n");
-						delete arr;
+						delete arrptr;
 						return NULL;
 					}
-					arr->addFloatToArray(atof(value.c_str()));
+					arrptr->append(atof(value.c_str()));
 				}
 			}
 			head = pos;
@@ -277,7 +793,7 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 				pos = json.find(json[head], head+start);
 				if (pos == std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete arr;
+					delete arrptr;
 					return NULL;
 				}
 				start = pos - head + 1;
@@ -290,18 +806,18 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 					value.erase(escape, 1);
 				escape = value.find("\\");
 			}
-			arr->addTextToArray(value);
+			arrptr->append(value);
 			head = pos + start;
 		}
 		// array
 		else if (json[head] == '[') {
-			jsarray *narr = parseArray(json, &head);
-			arr->addArrayToArray(narr);
+			jsarray *narr = parse(json, &head);
+			arrptr->append(*narr);
 		}
 		// object
 		else if (json[head] == '{') {
 			jsobject *nobj = jsobject::parse(json, &head);
-			arr->addObjectToArray(nobj);
+			arrptr->append(*nobj);
 		}
 
 		head = json.find_first_not_of(", \t\r\n", head);
@@ -310,7 +826,7 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
 	if (headPtr != NULL)
 		*headPtr = head + 1;
 
-	return arr;
+	return arrptr;
 }
 
 
@@ -318,210 +834,51 @@ jsarray* jsarray::parseArray(std::string json, size_t *headPtr) {
  *  public methods: jsobject                                   *
  ***************************************************************/
 
-void jsobject::addBooleanToObject(std::string key, bool value) {
-	boolean[key] = value;
+jsvar& jsobject::operator[](const char *key) {
+	return (*this)[std::string(key)];
 }
 
-void jsobject::addIntegerToObject(std::string key, long long value) {
-	inumber[key] = value;
-}
-
-void jsobject::addFloatToObject(std::string key, double value) {
-	fnumber[key] = value;
-}
-
-void jsobject::addTextToObject(std::string key, std::string value) {
-	text[key] = value;
-}
-
-void jsobject::addArrayToObject(std::string key, jsarray* value) {
-	array[key] = value;
-}
-
-void jsobject::addObjectToObject(std::string key, jsobject* value) {
-	object[key] = value;
-}
-
-int jsobject::getItemType(std::string key) {
-	if (boolean.count(key))
-		return JSON_BOOLEAN;
-	if (inumber.count(key))
-		return JSON_INTEGER;
-	if (fnumber.count(key))
-		return JSON_FLOAT;
-	if (text.count(key))
-		return JSON_TEXT;
-	if (array.count(key))
-		return JSON_ARRAY;
-	if (object.count(key))
-		return JSON_OBJECT;
-
-	return -1;
-}
-
-bool jsobject::getItemAsBoolean(std::string key, bool *err) {
-	if (err)
-		*err = false;
-	if (boolean.count(key))
-		return boolean[key];
-	
-	if (err)
-		*err = true;
-	return false;
-}
-
-long long jsobject::getItemAsInteger(std::string key, bool *err) {
-	if (err)
-		*err = false;
-	if (inumber.count(key))
-		return inumber[key];
-	
-	if (err)
-		*err = true;
-	return 0;
-}
-
-double jsobject::getItemAsFloat(std::string key, bool *err) {
-	if (err)
-		*err = false;
-	if (fnumber.count(key))
-		return fnumber[key];
-	
-	if (err)
-		*err = true;
-	return 0.0;
-}
-
-std::string jsobject::getItemAsText(std::string key, bool *err) {
-	if (err)
-		*err = false;
-	if (text.count(key))
-		return text[key];
-	
-	if (err)
-		*err = true;
-	return "";
-}
-
-jsarray* jsobject::getItemAsArray(std::string key, bool *err) {
-	if (err)
-		*err = false;
-	if (array.count(key))
-		return array[key];
-	
-	if (err)
-		*err = true;
-	return NULL;
-}
-
-jsobject* jsobject::getItemAsObject(std::string key, bool *err) {
-	if (err)
-		*err = false;
-	if (object.count(key))
-		return object[key];
-	
-	if (err)
-		*err = true;
-	return NULL;
+jsvar& jsobject::operator[](std::string key) {
+	if (dict.count(key) <= 0)
+		dict[key] = jsvar();
+	return dict[key];
 }
 
 std::string jsobject::stringify(bool pretty, int indent) {
-	std::map<std::string, bool>::iterator itB;
-	std::map<std::string, long long>::iterator itI;
-	std::map<std::string, double>::iterator itF;
-	std::map<std::string, std::string>::iterator itT;
-	std::map<std::string, jsarray*>::iterator itA;
-	std::map<std::string, jsobject*>::iterator itO;
-
-	char canum[32];
-	std::string snum;
-	size_t pos, start, escape;
-	bool empty = true;
-	char pad[64];
-	std::string padding;
-	std::string esctext;
+	std::map<std::string,jsvar>::iterator it;
+	char pad[128];
+	size_t start, escape;
+	std::string esckey;
+	std::string padding = "";
+	std::string ipadding = "";
 	std::string result = "{";
 
 	if (pretty) {
 		sprintf(pad, "%*s", 4*indent, "");
 		padding = std::string(pad);
+		ipadding = padding + "    ";
 	}
 
-	for (itB = boolean.begin(); itB != boolean.end(); itB++) {
-		if (pretty)
-			result += "\n" + padding + "    ";
-		result += "\"" + itB->first + "\":";
-		if (pretty)
-			result += " ";
-		if (itB->second == true)
-			result += "true,";
-		else
-			result += "false,";
-		empty = false;
-	}
-	for (itI = inumber.begin(); itI != inumber.end(); itI++) {
-		if (pretty)
-			result += "\n" + padding + "    ";
-		result += "\"" + itI->first + "\":";
-		if (pretty)
-			result += " ";
-		sprintf(canum, "%lld", itI->second);
-		result += std::string(canum) + ",";
-		empty = false;
-	}
-	for (itF = fnumber.begin(); itF != fnumber.end(); itF++) {
-		if (pretty)
-			result += "\n" + padding + "    ";
-		result += "\"" + itF->first + "\":";
-		if (pretty)
-			result += " ";
-		sprintf(canum, "%.14lf", itF->second);
-		snum = std::string(canum);
-		pos = snum.find_last_not_of("0");
-		if (pos != std::string::npos)
-			snum = snum.substr(0, pos+1);
-		if (snum[snum.length()-1] == '.')
-			snum += "0";
-		result += snum + ",";
-		empty = false;
-	}
-	for (itT = text.begin(); itT != text.end(); itT++) {
-		if (pretty)
-			result += "\n" + padding + "    ";
-		result += "\"" + itT->first + "\":";
-		if (pretty)
-			result += " ";
-		esctext = itT->second;
-		start = 0;
-		escape = esctext.find_first_of("\"\'");
-		while (escape != std::string::npos) {
-			esctext = esctext.substr(0, escape) + "\\" + esctext.substr(escape);
-			start = escape + 2;
-			escape = esctext.find_first_of("\"\'", start);
+	for (it = dict.begin(); it != dict.end(); it++) {
+		if (it->second.getType() != JS_TYPE_INVALID) {
+			if (pretty)
+				result += "\n" + ipadding;
+			esckey = it->first;
+			start = 0;
+			escape = esckey.find_first_of("\"\'");
+			while (escape != std::string::npos) {
+				esckey = esckey.substr(0, escape) + "\\" + esckey.substr(escape);
+				start = escape + 2;
+				escape = esckey.find_first_of("\"\'", start);
+			}
+			result += "\"" + esckey + "\":";
+			if (pretty)
+				result += " ";
+			result += it->second.toString(pretty, indent + 1) + ",";
 		}
-		result += "\"" + esctext + "\",";
-		empty = false;
-	}
-	for (itA = array.begin(); itA != array.end(); itA++) {
-		if (pretty)
-			result += "\n" + padding + "    ";
-		result += "\"" + itA->first + "\":";
-		if (pretty)
-			result += " ";
-		result += itA->second->stringify(pretty, indent+1) + ",";
-		empty = false;
-	}
-	for (itO = object.begin(); itO != object.end(); itO++) {
-		if (pretty)
-			result += "\n" + padding + "    ";
-		result += "\"" + itO->first + "\":";
-		if (pretty)
-			result += " ";
-		result += itO->second->stringify(pretty, indent+1) + ",";
-		empty = false;
 	}
 
-	if (!empty) {
+	if (dict.size() > 0) {
 		if (pretty) {
 			result[result.length()-1] = '\n';
 			result += padding + "}";
@@ -530,9 +887,8 @@ std::string jsobject::stringify(bool pretty, int indent) {
 			result[result.length()-1] = '}';
 		}
 	}
-	else {
+	else
 		result += "}";
-	}
 
 	return result;
 }
@@ -558,7 +914,7 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 		return NULL;
 	}
 
-	jsobject* obj = new jsobject();
+	jsobject* objptr = new jsobject();
 	head = json.find_first_not_of(" \t\r\n", head+1);
 
 	std::string key, value;
@@ -572,7 +928,7 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 				pos = json.find(json[head], head+start);
 				if (pos == std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete obj;
+					delete objptr;
 					return NULL;
 				}
 				start = pos - head + 1;
@@ -594,7 +950,7 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 		head = json.find_first_not_of(" \t\r\n", pos+start);
 		if (json[head] != ':') {
 			fprintf(stderr, "Error parsing JSON\n");
-			delete obj;
+			delete objptr;
 			return NULL;
 		}
 		// determine value type
@@ -602,16 +958,16 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 		// boolean
 		if (json[head] == 't' || json[head] == 'f') {
 			if (json.substr(head, 4) == "true") {
-				obj->addBooleanToObject(key, true);
+				(*objptr)[key] = true;
 				head += 4;
 			}
 			else if (json.substr(head, 5) == "false") {
-				obj->addBooleanToObject(key, false);
+				(*objptr)[key] = false;
 				head += 5;
 			}
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
-				delete obj;
+				delete objptr;
 				return NULL;
 			}
 		}
@@ -620,7 +976,7 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 			pos = json.find_first_not_of(".x0123456789ABCDEFabcdef", head+1);
 			if (pos == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
-				delete obj;
+				delete objptr;
 				return NULL;
 			}
 			value = json.substr(head, pos-head);
@@ -628,31 +984,31 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 			if (hex != std::string::npos) {
 				if ((value.substr(0,2) != "0x" && value.substr(0,3) != "-0x" && value.substr(0,3) != "+0x") || value.find_first_of(".x", hex+1) != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete obj;
+					delete objptr;
 					return NULL;
 				}
 				sscanf(value.substr(hex+1).c_str(), "%llx", &hnum);
 				if (value[0] == '-')
 					hnum *= -1;
-				obj->addIntegerToObject(key, hnum);
+				(*objptr)[key] = hnum;
 			}
 			else {
 				if (value.find_first_of("ABCDEFabcdef") != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete obj;
+					delete objptr;
 					return NULL;
 				}
 				dot = value.find(".");
 				if (dot == std::string::npos) {
-					obj->addIntegerToObject(key, atoll(value.c_str()));
+					(*objptr)[key] = atoll(value.c_str());
 				}
 				else {
 					if (value.find(".", dot + 1) != std::string::npos) {
 						fprintf(stderr, "Error parsing JSON\n");
-						delete obj;
+						delete objptr;
 						return NULL;
 					}
-					obj->addFloatToObject(key, atof(value.c_str()));
+					(*objptr)[key] = atof(value.c_str());
 				}
 			}
 			head = pos;
@@ -664,7 +1020,7 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 				pos = json.find(json[head], head+start);
 				if (pos == std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
-					delete obj;
+					delete objptr;
 					return NULL;
 				}
 				start = pos - head + 1;
@@ -677,18 +1033,18 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 					value.erase(escape, 1);
 				escape = value.find("\\");
 			}
-			obj->addTextToObject(key, value);
+			(*objptr)[key] = value;
 			head = pos + start;
 		}
 		// array
 		else if (json[head] == '[') {
-			jsarray *narr = jsarray::parseArray(json, &head);
-			obj->addArrayToObject(key, narr);
+			jsarray *narr = jsarray::parse(json, &head);
+			(*objptr)[key] = *narr;
 		}
 		// object
 		else if (json[head] == '{') {
 			jsobject *nobj = parse(json, &head);
-			obj->addObjectToObject(key, nobj);
+			(*objptr)[key] = *nobj;
 		}
 
 		head = json.find_first_not_of(", \t\r\n", head);
@@ -697,7 +1053,7 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 	if (headPtr != NULL)
 		*headPtr = head + 1;
 
-	return obj;
+	return objptr;
 }
 
 jsobject* jsobject::parseFromFile(std::string filename) {
