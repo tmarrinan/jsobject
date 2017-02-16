@@ -6,19 +6,19 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 * Easy data access using `[]`
 * JSON5 parsing
 
-| JSON5 Feature                                            | Integrated                              |
-|----------------------------------------------------------|-----------------------------------------|
-| quoted, single-quoted, and unquoted object names         | Yes                                     |
-| trailing commas in objects and arrays                    | Yes                                     |
-| single quoted strings                                    | Yes                                     |
-| escape sequences in strings                              | Partial *currently only escapes quotes* |
-| multiline strings (prefix each newline with a backslash) | No                                      |
-| numbers can be hexadecimal (e.g. 0xA639ED01)             | Yes                                     |
-| numbers can begin or end with a decimal point            | Yes                                     |
-| numbers can include Infinity, -Infinity, NaN, and -NaN   | No                                      |
-| numbers can begin with an explicit plus sign             | Yes                                     |
-| allow inline (single-line) comments                      | No                                      |
-| allow block (multi-line) comments                        | No                                      |
+| JSON5 Feature                                            | Integrated                                |
+|----------------------------------------------------------|-------------------------------------------|
+| quoted, single-quoted, and unquoted object names         | Yes                                       |
+| trailing commas in objects and arrays                    | Yes                                       |
+| single quoted strings                                    | Yes                                       |
+| escape sequences in strings                              | Partial (*currently only escapes quotes*) |
+| multiline strings (prefix each newline with a backslash) | No                                        |
+| numbers can be hexadecimal (e.g. 0xA639ED01)             | Yes                                       |
+| numbers can begin or end with a decimal point            | Yes                                       |
+| numbers can include Infinity, -Infinity, NaN, and -NaN   | No                                        |
+| numbers can begin with an explicit plus sign             | Yes                                       |
+| allow inline (single-line) comments                      | No                                        |
+| allow block (multi-line) comments                        | No                                        |
 
 ### Example
 ```
