@@ -403,6 +403,7 @@ int jsvar::getType() {
 
 std::string jsvar::toString(bool pretty, int indent) {
 	size_t pos, start, escape;
+	char escchar;
 	char canum[64];
 	std::string esctext;
 	std::string result = "";
@@ -441,11 +442,25 @@ std::string jsvar::toString(bool pretty, int indent) {
 		case JS_TYPE_TEXT:
 			esctext = text;
 			start = 0;
-			escape = esctext.find_first_of("\"\n");
+			escape = esctext.find_first_of("\"\b\r\n\f\t\v");
 			while (escape != std::string::npos) {
-				esctext = esctext.substr(0, escape) + "\\" + esctext.substr(escape);
+				if (esctext[escape] == '\"')
+					escchar = '\"';
+				else if (esctext[escape] == '\b')
+					escchar = 'b';
+				else if (esctext[escape] == '\r')
+					escchar = 'r';
+				else if (esctext[escape] == '\n')
+					escchar = 'n';
+				else if (esctext[escape] == '\f')
+					escchar = 'f';
+				else if (esctext[escape] == '\t')
+					escchar = 't';
+				else if (esctext[escape] == '\v')
+					escchar = 'v';
+				esctext = esctext.substr(0, escape) + "\\" + escchar + esctext.substr(escape+1);
 				start = escape + 2;
-				escape = esctext.find_first_of("\"\n", start);
+				escape = esctext.find_first_of("\"\b\r\n\f\t\v", start);
 			}
 			result += "\"" + esctext + "\"";
 			break;
@@ -1017,8 +1032,19 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			}
 			escape = value.find("\\");
 			while (escape != std::string::npos) {
-				if (value[escape+1] == '\"' || value[escape+1] == '\'')
-					value.erase(escape, 1);
+				value.erase(escape, 1);
+				if (value[escape] == 'b')
+					value[escape] = '\b';
+				else if (value[escape] == 'r')
+					value[escape] = '\r';
+				else if (value[escape] == 'n')
+					value[escape] = '\n';
+				else if (value[escape] == 'f')
+					value[escape] = '\f';
+				else if (value[escape] == 't')
+					value[escape] = '\t';
+				else if (value[escape] == 'v')
+					value[escape] = '\v';
 				escape = value.find("\\", escape+1);
 			}
 			arrptr->append(value);
@@ -1342,8 +1368,19 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			}
 			escape = value.find("\\");
 			while (escape != std::string::npos) {
-				if (value[escape+1] == '\"' || value[escape+1] == '\'' || value[escape+1] == '\n')
-					value.erase(escape, 1);
+				value.erase(escape, 1);
+				if (value[escape] == 'b')
+					value[escape] = '\b';
+				else if (value[escape] == 'r')
+					value[escape] = '\r';
+				else if (value[escape] == 'n')
+					value[escape] = '\n';
+				else if (value[escape] == 'f')
+					value[escape] = '\f';
+				else if (value[escape] == 't')
+					value[escape] = '\t';
+				else if (value[escape] == 'v')
+					value[escape] = '\v';
 				escape = value.find("\\", escape+1);
 			}
 			(*objptr)[key] = value;
