@@ -397,6 +397,15 @@ jsvar& jsvar::operator[](std::string key) {
 	return (*object)[key];
 }
 
+std::ostream &operator<<(std::ostream &output, jsvar &var) {
+	if (var.type == JS_TYPE_TEXT)
+		output << var.text;
+	else
+		output << var.toString();
+
+	return output;
+}
+
 int jsvar::getType() {
 	return type;
 }

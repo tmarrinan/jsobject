@@ -34,10 +34,9 @@ int main(int argc, char **argv) {
     obj["half"] = 0.5;
 
     jsvar phones = obj["contact"]["phone"];
-    std::string phone0 = phones[0];
 
     std::cout << obj.stringify(true) << std::endl;
-    std::cout << "main phone number: " << phone0 << std::endl;
+    std::cout << "main phone number: " << phones[0] << std::endl;
 
     /*** PRINT *************************
     {

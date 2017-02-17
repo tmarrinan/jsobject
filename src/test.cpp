@@ -25,8 +25,7 @@ int main(int argc, char **argv) {
 
 	std::cout << obj.stringify(true) << std::endl;
 
-	std::cout << obj["oh"].stringify() << std::endl;
+	std::cout << obj["oh"][1] << std::endl;
 
-	
 	return 0;
 }

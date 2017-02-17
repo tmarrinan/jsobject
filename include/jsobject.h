@@ -92,6 +92,8 @@ public:
 	jsvar& operator[](const char *key);
 	jsvar& operator[](std::string key);
 
+	friend std::ostream &operator<<(std::ostream &output, jsvar &var);
+
 	int getType();
 	std::string toString(bool pretty = false, int indent = 0);
 
