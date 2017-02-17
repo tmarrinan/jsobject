@@ -711,6 +711,38 @@ void jsvar::append(void *value) {
 	array->append(value);
 }
 
+void jsvar::remove(int index) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->remove((size_t)index);
+}
+
+void jsvar::remove(size_t index) {
+	if (type != JS_TYPE_ARRAY) {
+		fprintf(stderr, "Invalid access of jsvar type array\n");
+		exit(1);
+	}
+	array->remove(index);
+}
+
+void jsvar::remove(const char *key) {
+	if (type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type object\n");
+		exit(1);
+	}
+	object->remove(std::string(key));
+}
+
+void jsvar::remove(std::string key) {
+	if (type != JS_TYPE_OBJECT) {
+		fprintf(stderr, "Invalid access of jsvar type object\n");
+		exit(1);
+	}
+	object->remove(key);
+}
+
 size_t jsvar::length() {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -836,6 +868,18 @@ void jsarray::append(jsobject &value) {
 
 void jsarray::append(void *value) {
 	list.push_back(jsvar(value));
+}
+
+void jsarray::remove(int index) {
+	remove((size_t)index);
+}
+
+void jsarray::remove(size_t index) {
+	if (index >= list.size()) {
+		fprintf(stderr, "Invalid access of jsarray: index out of bounds\n");
+		exit(1);
+	}
+	list.erase(list.begin()+index);
 }
 
 size_t jsarray::length() {
@@ -1109,6 +1153,14 @@ jsvar& jsobject::operator[](std::string key) {
 	if (dict.count(key) <= 0)
 		dict[key] = jsvar();
 	return dict[key];
+}
+
+void jsobject::remove(const char *key) {
+	remove(std::string(key));
+}
+
+void jsobject::remove(std::string key) {
+	dict.erase(key);
 }
 
 std::vector<std::string> jsobject::keys() {

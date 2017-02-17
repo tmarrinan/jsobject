@@ -116,6 +116,10 @@ public:
 	void append(jsarray &value);
 	void append(jsobject &value);
 	void append(void *value);
+	void remove(int index);
+	void remove(size_t index);
+	void remove(const char *key);
+	void remove(std::string key);
 	size_t length();
 	std::vector<std::string> keys();
 	bool hasProperty(std::string key);
@@ -152,8 +156,10 @@ public:
 	void append(jsarray &value);
 	void append(jsobject &value);
 	void append(void *value);
-
+	void remove(int index);
+	void remove(size_t index);
 	size_t length();
+
 	std::string stringify(bool pretty = false, int indent = 0);
 
 	static jsvar parse(std::string json, size_t *headPtr = NULL);
@@ -169,6 +175,9 @@ public:
 
 	jsvar& operator[](const char *key);
 	jsvar& operator[](std::string key);
+
+	void remove(const char *key);
+	void remove(std::string key);
 
 	std::vector<std::string> keys();
 	bool hasProperty(std::string key);

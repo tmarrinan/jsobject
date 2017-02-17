@@ -23,6 +23,9 @@ int main(int argc, char **argv) {
 	std::cout << "'contact' has email? " << hasEmail << ", has fax? " << hasFax << std::endl;
 	std::cout << "'contact' number of phones? " << phones.length() << std::endl;
 
+	phones.remove(3);
+	obj["contact"].remove("empty");
+
 	std::cout << obj.stringify(true) << std::endl;
 
 	std::cout << obj["oh"][1] << std::endl;
