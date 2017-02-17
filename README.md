@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     obj["name"] = "tmarrinan";
     obj["year"] = 2017;
     obj["contact"] = jsobject::parse("{\"phone\":[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\"}");
-    obj["empty"] = (void*)NULL;
+    obj["empty"] = JS_NULL;
     obj["half"] = 0.5;
 
     jsvar phones = obj["contact"]["phone"];

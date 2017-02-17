@@ -12,6 +12,8 @@
 #define JS_TYPE_ARRAY    5
 #define JS_TYPE_OBJECT   6
 
+#define JS_NULL (void*)NULL
+
 class jsarray;
 class jsobject;
 

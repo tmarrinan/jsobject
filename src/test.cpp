@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 	obj["half"] = 0.5;
 
 	jsvar phones = obj["contact"]["phones"];
-	phones.append((void*)NULL);
+	phones.append(JS_NULL);
 	phones.append(false);
 	obj["contact"]["phones"].append(3.14159);
 
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 
 	obj["test_arr"] = arr;
 
-	obj["nothing"] = (void*)NULL;
+	obj["nothing"] = JS_NULL;
 	obj["input"] = jsobject::parseFromFile("input.json");
 
 	bool hasEmail = obj["contact"].hasProperty("email");
