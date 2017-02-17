@@ -1010,7 +1010,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			while (escape != std::string::npos) {
 				if (value[escape+1] == '\"' || value[escape+1] == '\'')
 					value.erase(escape, 1);
-				escape = value.find("\\");
+				escape = value.find("\\", escape+1);
 			}
 			arrptr->append(value);
 			head = pos + start;
@@ -1323,7 +1323,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			while (escape != std::string::npos) {
 				if (value[escape+1] == '\"' || value[escape+1] == '\'')
 					value.erase(escape, 1);
-				escape = value.find("\\");
+				escape = value.find("\\", escape+1);
 			}
 			(*objptr)[key] = value;
 			head = pos + start;
