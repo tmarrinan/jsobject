@@ -26,14 +26,18 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 #include "jsobject.h"
 
 int main(int argc, char **argv) {
-    jsobject obj;
+    jsvar obj;
     obj["name"] = "tmarrinan";
     obj["year"] = 2017;
-    obj["contact"] = *jsobject::parse("{\"phone\":[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\"}");
+    obj["contact"] = jsobject::parse("{\"phone\":[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\"}");
     obj["empty"] = (void*)NULL;
     obj["half"] = 0.5;
 
+    jsvar phones = obj["contact"]["phone"];
+    std::string phone0 = phones[0];
+
     std::cout << obj.stringify(true) << std::endl;
+    std::cout << "main phone number: " << phone0 << std::endl;
 
     /*** PRINT *************************
     {
@@ -49,6 +53,7 @@ int main(int argc, char **argv) {
         "name": "tmarrinan",
         "year": 2017
     }
+    main phone number: 999-999-9999
     ************************************/
 
     return 0;

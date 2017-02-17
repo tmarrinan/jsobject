@@ -150,7 +150,7 @@ public:
 	size_t length();
 	std::string stringify(bool pretty = false, int indent = 0);
 
-	static jsarray* parse(std::string json, size_t *headPtr = NULL);
+	static jsvar parse(std::string json, size_t *headPtr = NULL);
 };
 
 class jsobject {
@@ -168,6 +168,6 @@ public:
 	bool hasProperty(std::string key);
 	std::string stringify(bool pretty = false, int indent = 0);
 
-	static jsobject* parse(std::string json, size_t *headPtr = NULL);
-	static jsobject* parseFromFile(std::string filename);
+	static jsvar parse(std::string json, size_t *headPtr = NULL);
+	static jsvar parseFromFile(std::string filename);
 };

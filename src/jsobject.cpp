@@ -370,7 +370,11 @@ jsvar& jsvar::operator[](int index) {
 }
 
 jsvar& jsvar::operator[](size_t index) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -382,7 +386,11 @@ jsvar& jsvar::operator[](const char *key) {
 }
 
 jsvar& jsvar::operator[](std::string key) {
-	if (type != JS_TYPE_OBJECT) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_OBJECT;
+		object = new jsobject();
+	}
+	else if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
 	}
@@ -444,7 +452,11 @@ std::string jsvar::toString(bool pretty, int indent) {
 }
 
 void jsvar::append(jsvar &value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -452,7 +464,11 @@ void jsvar::append(jsvar &value) {
 }
 
 void jsvar::append(bool value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -460,7 +476,11 @@ void jsvar::append(bool value) {
 }
 
 void jsvar::append(char value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -468,7 +488,11 @@ void jsvar::append(char value) {
 }
 
 void jsvar::append(short value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -476,7 +500,11 @@ void jsvar::append(short value) {
 }
 
 void jsvar::append(int value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -484,7 +512,11 @@ void jsvar::append(int value) {
 }
 
 void jsvar::append(long value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -492,7 +524,11 @@ void jsvar::append(long value) {
 }
 
 void jsvar::append(long long value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -500,7 +536,11 @@ void jsvar::append(long long value) {
 }
 
 void jsvar::append(unsigned char value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -508,7 +548,11 @@ void jsvar::append(unsigned char value) {
 }
 
 void jsvar::append(unsigned short value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -516,7 +560,11 @@ void jsvar::append(unsigned short value) {
 }
 
 void jsvar::append(unsigned int value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -524,7 +572,11 @@ void jsvar::append(unsigned int value) {
 }
 
 void jsvar::append(unsigned long value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -532,7 +584,11 @@ void jsvar::append(unsigned long value) {
 }
 
 void jsvar::append(unsigned long long value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -540,7 +596,11 @@ void jsvar::append(unsigned long long value) {
 }
 
 void jsvar::append(float value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -548,7 +608,11 @@ void jsvar::append(float value) {
 }
 
 void jsvar::append(double value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -556,7 +620,11 @@ void jsvar::append(double value) {
 }
 
 void jsvar::append(const char *value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -564,7 +632,11 @@ void jsvar::append(const char *value) {
 }
 
 void jsvar::append(std::string value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -572,7 +644,11 @@ void jsvar::append(std::string value) {
 }
 
 void jsvar::append(jsarray &value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -580,7 +656,11 @@ void jsvar::append(jsarray &value) {
 }
 
 void jsvar::append(jsobject &value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -588,7 +668,11 @@ void jsvar::append(jsobject &value) {
 }
 
 void jsvar::append(void *value) {
-	if (type != JS_TYPE_ARRAY) {
+	if (type == JS_TYPE_INVALID) {
+		type = JS_TYPE_ARRAY;
+		array = new jsarray();
+	}
+	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
 	}
@@ -760,7 +844,7 @@ std::string jsarray::stringify(bool pretty, int indent) {
 	return result;
 }
 
-jsarray* jsarray::parse(std::string json, size_t *headPtr) {
+jsvar jsarray::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
 
@@ -901,13 +985,13 @@ jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 		}
 		// array
 		else if (json[head] == '[') {
-			jsarray *narr = parse(json, &head);
-			arrptr->append(*narr);
+			jsvar narr = parse(json, &head);
+			arrptr->append(narr);
 		}
 		// object
 		else if (json[head] == '{') {
-			jsobject *nobj = jsobject::parse(json, &head);
-			arrptr->append(*nobj);
+			jsvar nobj = jsobject::parse(json, &head);
+			arrptr->append(nobj);
 		}
 
 		// ignore comments
@@ -932,7 +1016,7 @@ jsarray* jsarray::parse(std::string json, size_t *headPtr) {
 	if (headPtr != NULL)
 		*headPtr = head + 1;
 
-	return arrptr;
+	return jsvar(*arrptr);
 }
 
 
@@ -1016,7 +1100,7 @@ std::string jsobject::stringify(bool pretty, int indent) {
 	return result;
 }
 
-jsobject* jsobject::parse(std::string json, size_t *headPtr) {
+jsvar jsobject::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
 
@@ -1190,13 +1274,13 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 		}
 		// array
 		else if (json[head] == '[') {
-			jsarray *narr = jsarray::parse(json, &head);
-			(*objptr)[key] = *narr;
+			jsvar narr = jsarray::parse(json, &head);
+			(*objptr)[key] = narr;
 		}
 		// object
 		else if (json[head] == '{') {
-			jsobject *nobj = parse(json, &head);
-			(*objptr)[key] = *nobj;
+			jsvar nobj = parse(json, &head);
+			(*objptr)[key] = nobj;
 		}
 
 		// ignore comments
@@ -1221,10 +1305,10 @@ jsobject* jsobject::parse(std::string json, size_t *headPtr) {
 	if (headPtr != NULL)
 		*headPtr = head + 1;
 
-	return objptr;
+	return jsvar(*objptr);
 }
 
-jsobject* jsobject::parseFromFile(std::string filename) {
+jsvar jsobject::parseFromFile(std::string filename) {
 	FILE *f = fopen(filename.c_str(), "rb");
 	if (f == NULL) {
 		fprintf(stderr, "Error opening file %s\n", filename.c_str());
