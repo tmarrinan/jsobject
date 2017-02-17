@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
 	jsvar obj;
-	/*obj["name"] = "tmarrinan";
+	obj["name"] = "tmarrinan";
 	obj["year"] = 2017;
 	obj["contact"] = jsobject::parse("{'phones':[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\",empty:null}");
 	obj["half"] = 0.5;
@@ -24,14 +24,12 @@ int main(int argc, char **argv) {
 
 	obj["test_arr"] = arr;
 
-	obj["nothing"] = JS_NULL;*/
-	obj["input"] = jsobject::parseFromFile("input.json");
-/*
+	obj["nothing"] = JS_NULL;
 	bool hasEmail = obj["contact"].hasProperty("email");
 	bool hasFax = obj["contact"].hasProperty("fax");
 	std::cout << "'contact' has email? " << hasEmail << ", has fax? " << hasFax << std::endl;
 	std::cout << "'contact' number of phones? " << phones.length() << std::endl;
-*/
+
 	std::cout << obj.stringify(true) << std::endl;
 	
 	return 0;

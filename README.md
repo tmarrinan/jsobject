@@ -12,7 +12,7 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 | trailing commas in objects and arrays                    | Yes                                       |
 | single quoted strings                                    | Yes                                       |
 | escape sequences in strings                              | Partial (*currently only escapes quotes*) |
-| multiline strings (prefix each newline with a backslash) | No                                        |
+| multiline strings (prefix each newline with a backslash) | Yes                                       |
 | numbers can be hexadecimal (e.g. 0xA639ED01)             | Yes                                       |
 | numbers can begin or end with a decimal point            | Yes                                       |
 | numbers can include Infinity, -Infinity, NaN, and -NaN   | Yes                                       |

@@ -441,7 +441,7 @@ std::string jsvar::toString(bool pretty, int indent) {
 		case JS_TYPE_TEXT:
 			esctext = text;
 			start = 0;
-			escape = esctext.find_first_of("\"\'");
+			escape = esctext.find_first_of("\"\'\n");
 			while (escape != std::string::npos) {
 				esctext = esctext.substr(0, escape) + "\\" + esctext.substr(escape);
 				start = escape + 2;
@@ -864,7 +864,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			head = json.find("*/", head) + 2;
 		if (head == std::string::npos) {
 			fprintf(stderr, "Error parsing JSON\n");
-			return NULL;
+			return jsvar();
 		}
 		head = json.find_first_not_of(" \t\r\n", head);
 		comment = json.substr(head, 2);
@@ -872,7 +872,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 
 	if (json[head] != '[') {
 		fprintf(stderr, "Error parsing JSON\n");
-		return NULL;
+		return jsvar();
 	}
 
 	jsarray* arrptr = new jsarray();
@@ -891,7 +891,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 				head = json.find("*/", head) + 2;
 			if (head == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
-				return NULL;
+				return jsvar();
 			}
 			head = json.find_first_not_of(" \t\r\n", head);
 			comment = json.substr(head, 2);
@@ -901,13 +901,13 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 		// null
 		if (json[head] == 'n') {
 			if (json.substr(head, 4) == "null") {
-				arrptr->append((void*)NULL);
+				arrptr->append(JS_NULL);
 				head += 4;
 			}
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete arrptr;
-				return NULL;
+				return jsvar();
 			}
 		}
 		// boolean
@@ -923,7 +923,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete arrptr;
-				return NULL;
+				return jsvar();
 			}
 		}
 		// number (infinity or nan)
@@ -947,7 +947,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete arrptr;
-				return NULL;
+				return jsvar();
 			}
 		}
 		// number
@@ -956,7 +956,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			if (pos == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete arrptr;
-				return NULL;
+				return jsvar();
 			}
 			value = json.substr(head, pos-head);
 			hex = value.find("x");
@@ -964,7 +964,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 				if ((value.substr(0,2) != "0x" && value.substr(0,3) != "-0x" && value.substr(0,3) != "+0x") || value.find_first_of(".x", hex+1) != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete arrptr;
-					return NULL;
+					return jsvar();
 				}
 				sscanf(value.substr(hex+1).c_str(), "%llx", &hnum);
 				if (value[0] == '-')
@@ -975,7 +975,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 				if (value.find_first_of("ABCDEFabcdef") != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete arrptr;
-					return NULL;
+					return jsvar();
 				}
 				dot = value.find(".");
 				if (dot == std::string::npos) {
@@ -985,7 +985,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 					if (value.find(".", dot + 1) != std::string::npos) {
 						fprintf(stderr, "Error parsing JSON\n");
 						delete arrptr;
-						return NULL;
+						return jsvar();
 					}
 					arrptr->append(atof(value.c_str()));
 				}
@@ -1000,12 +1000,21 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 				if (pos == std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete arrptr;
-					return NULL;
+					return jsvar();
 				}
 				start = pos - head + 1;
 			} while(json[pos-1] == '\\');
 			start = 1;
 			value = json.substr(head+start, pos-(head+start));
+			escape = value.find("\n");
+			while (escape != std::string::npos) {
+				if (escape == 0 || value[escape-1] != '\\') {
+					fprintf(stderr, "Error parsing JSON\n");
+					delete arrptr;
+					return jsvar();
+				}
+				escape = value.find("\n", escape+1);
+			}
 			escape = value.find("\\");
 			while (escape != std::string::npos) {
 				if (value[escape+1] == '\"' || value[escape+1] == '\'')
@@ -1036,7 +1045,8 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 				head = json.find("*/", head) + 2;
 			if (head == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
-				return NULL;
+				delete arrptr;
+				return jsvar();
 			}
 			head = json.find_first_not_of(" \t\r\n", head);
 			comment = json.substr(head, 2);
@@ -1098,6 +1108,7 @@ std::string jsobject::stringify(bool pretty, int indent) {
 		ipadding = padding + "    ";
 	}
 
+	int count = 0;
 	for (it = dict.begin(); it != dict.end(); it++) {
 		if (it->second.getType() != JS_TYPE_INVALID) {
 			if (pretty)
@@ -1114,10 +1125,11 @@ std::string jsobject::stringify(bool pretty, int indent) {
 			if (pretty)
 				result += " ";
 			result += it->second.toString(pretty, indent + 1) + ",";
+			count++;
 		}
 	}
 
-	if (dict.size() > 0) {
+	if (count > 0) {
 		if (pretty) {
 			result[result.length()-1] = '\n';
 			result += padding + "}";
@@ -1144,7 +1156,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			head = json.find("*/", head) + 2;
 		if (head == std::string::npos) {
 			fprintf(stderr, "Error parsing JSON\n");
-			return NULL;
+			return jsvar();
 		}
 		head = json.find_first_not_of(" \t\r\n", head);
 		comment = json.substr(head, 2);
@@ -1152,7 +1164,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 
 	if (json[head] != '{') {
 		fprintf(stderr, "Error parsing JSON\n");
-		return NULL;
+		return jsvar();
 	}
 
 	jsobject* objptr = new jsobject();
@@ -1171,7 +1183,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 				head = json.find("*/", head) + 2;
 			if (head == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
-				return NULL;
+				return jsvar();
 			}
 			head = json.find_first_not_of(" \t\r\n", head);
 			comment = json.substr(head, 2);
@@ -1185,7 +1197,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 				if (pos == std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete objptr;
-					return NULL;
+					return jsvar();
 				}
 				start = pos - head + 1;
 			} while(json[pos-1] == '\\');
@@ -1207,20 +1219,20 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 		if (json[head] != ':') {
 			fprintf(stderr, "Error parsing JSON\n");
 			delete objptr;
-			return NULL;
+			return jsvar();
 		}
 		// determine value type
 		head = json.find_first_not_of(" \t\r\n", head+1);
 		// null
 		if (json[head] == 'n') {
 			if (json.substr(head, 4) == "null") {
-				(*objptr)[key] = (void*)NULL;
+				(*objptr)[key] = JS_NULL;
 				head += 4;
 			}
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete objptr;
-				return NULL;
+				return jsvar();
 			}
 		}
 		// boolean
@@ -1236,7 +1248,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete objptr;
-				return NULL;
+				return jsvar();
 			}
 		}
 		// number (infinity or nan)
@@ -1260,7 +1272,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete objptr;
-				return NULL;
+				return jsvar();
 			}
 		}
 		// number
@@ -1269,7 +1281,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			if (pos == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
 				delete objptr;
-				return NULL;
+				return jsvar();
 			}
 			value = json.substr(head, pos-head);
 			hex = value.find("x");
@@ -1277,7 +1289,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 				if ((value.substr(0,2) != "0x" && value.substr(0,3) != "-0x" && value.substr(0,3) != "+0x") || value.find_first_of(".x", hex+1) != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete objptr;
-					return NULL;
+					return jsvar();
 				}
 				sscanf(value.substr(hex+1).c_str(), "%llx", &hnum);
 				if (value[0] == '-')
@@ -1288,7 +1300,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 				if (value.find_first_of("ABCDEFabcdef") != std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete objptr;
-					return NULL;
+					return jsvar();
 				}
 				dot = value.find(".");
 				if (dot == std::string::npos) {
@@ -1298,7 +1310,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 					if (value.find(".", dot + 1) != std::string::npos) {
 						fprintf(stderr, "Error parsing JSON\n");
 						delete objptr;
-						return NULL;
+						return jsvar();
 					}
 					(*objptr)[key] = atof(value.c_str());
 				}
@@ -1313,15 +1325,24 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 				if (pos == std::string::npos) {
 					fprintf(stderr, "Error parsing JSON\n");
 					delete objptr;
-					return NULL;
+					return jsvar();
 				}
 				start = pos - head + 1;
 			} while(json[pos-1] == '\\');
 			start = 1;
 			value = json.substr(head+start, pos-(head+start));
+			escape = value.find("\n");
+			while (escape != std::string::npos) {
+				if (escape == 0 || value[escape-1] != '\\') {
+					fprintf(stderr, "Error parsing JSON\n");
+					delete objptr;
+					return jsvar();
+				}
+				escape = value.find("\n", escape+1);
+			}
 			escape = value.find("\\");
 			while (escape != std::string::npos) {
-				if (value[escape+1] == '\"' || value[escape+1] == '\'')
+				if (value[escape+1] == '\"' || value[escape+1] == '\'' || value[escape+1] == '\n')
 					value.erase(escape, 1);
 				escape = value.find("\\", escape+1);
 			}
@@ -1349,7 +1370,8 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 				head = json.find("*/", head) + 2;
 			if (head == std::string::npos) {
 				fprintf(stderr, "Error parsing JSON\n");
-				return NULL;
+				delete objptr;
+				return jsvar();
 			}
 			head = json.find_first_not_of(" \t\r\n", head);
 			comment = json.substr(head, 2);
