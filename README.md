@@ -6,19 +6,19 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 * Easy data access using `[]`
 * JSON5 parsing
 
-| JSON5 Feature                                            | Integrated                                |
-|----------------------------------------------------------|-------------------------------------------|
-| quoted, single-quoted, and unquoted object names         | Yes                                       |
-| trailing commas in objects and arrays                    | Yes                                       |
-| single quoted strings                                    | Yes                                       |
-| escape sequences in strings                              | Yes                                       |
-| multiline strings (prefix each newline with a backslash) | Yes                                       |
-| numbers can be hexadecimal (e.g. 0xA639ED01)             | Yes                                       |
-| numbers can begin or end with a decimal point            | Yes                                       |
-| numbers can include Infinity, -Infinity, NaN, and -NaN   | Yes                                       |
-| numbers can begin with an explicit plus sign             | Yes                                       |
-| allow inline (single-line) comments                      | Yes                                       |
-| allow block (multi-line) comments                        | Yes                                       |
+| JSON5 Feature                                            | Integrated |
+|----------------------------------------------------------|------------|
+| Quoted, single-quoted, and unquoted object names         | Yes        |
+| Trailing commas in objects and arrays                    | Yes        |
+| Single quoted strings                                    | Yes        |
+| Escape sequences in strings                              | Yes        |
+| Multiline strings (prefix each newline with a backslash) | Yes        |
+| Numbers can be hexadecimal (e.g. 0xA639ED01)             | Yes        |
+| Numbers can begin or end with a decimal point            | Yes        |
+| Numbers can include Infinity, -Infinity, NaN, and -NaN   | Yes        |
+| Numbers can begin with an explicit plus sign             | Yes        |
+| Allow inline (single-line) comments                      | Yes        |
+| Allow block (multi-line) comments                        | Yes        |
 
 ### Example
 ```
