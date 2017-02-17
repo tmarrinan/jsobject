@@ -1488,7 +1488,7 @@ jsvar jsobject::parseFromFile(std::string filename) {
 	FILE *f = fopen(filename.c_str(), "rb");
 	if (f == NULL) {
 		fprintf(stderr, "Error opening file %s\n", filename.c_str());
-		return NULL;
+		return jsvar();
 	}
 
 	fseek(f, 0, SEEK_END);
@@ -1498,7 +1498,7 @@ jsvar jsobject::parseFromFile(std::string filename) {
 	char *text = (char*)malloc(fsize * sizeof(char));
 	if (fread(text, fsize, 1, f) != 1) {
 		fprintf(stderr, "Error reading file %s\n", filename.c_str());
-		return NULL;
+		return jsvar();
 	}
 	fclose(f);
 
