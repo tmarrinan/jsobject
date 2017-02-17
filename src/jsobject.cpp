@@ -422,13 +422,21 @@ std::string jsvar::toString(bool pretty, int indent) {
 			result = std::string(canum);
 			break;
 		case JS_TYPE_FLOAT:
-			sprintf(canum, "%.14lf", fnumber);
-			result = std::string(canum);
-			pos = result.find_last_not_of("0");
-			if (pos != std::string::npos)
-				result = result.substr(0, pos+1);
-			if (result[result.length()-1] == '.')
-				result += "0";
+			if (std::isnan(fnumber)) {
+				result = "NaN";
+			}
+			else if (std::isinf(fnumber)) {
+				result = "Infinity";
+			}
+			else {
+				sprintf(canum, "%.14lf", fnumber);
+				result = std::string(canum);
+				pos = result.find_last_not_of("0");
+				if (pos != std::string::npos)
+					result = result.substr(0, pos+1);
+				if (result[result.length()-1] == '.')
+					result += "0";
+			}
 			break;
 		case JS_TYPE_TEXT:
 			esctext = text;
@@ -903,7 +911,7 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			}
 		}
 		// boolean
-		if (json[head] == 't' || json[head] == 'f') {
+		else if (json[head] == 't' || json[head] == 'f') {
 			if (json.substr(head, 4) == "true") {
 				arrptr->append(true);
 				head += 4;
@@ -911,6 +919,30 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
 			else if (json.substr(head, 5) == "false") {
 				arrptr->append(false);
 				head += 5;
+			}
+			else {
+				fprintf(stderr, "Error parsing JSON\n");
+				delete arrptr;
+				return NULL;
+			}
+		}
+		// number (infinity or nan)
+		else if (json[head] == 'I' || json[head] == 'N' || json.substr(head, 2) == "-I" || json.substr(head, 2) == "-N") {
+			if (json.substr(head, 8) == "Infinity") {
+				arrptr->append(std::numeric_limits<double>::infinity());
+				head += 8;
+			}
+			else if (json.substr(head, 9) == "-Infinity") {
+				arrptr->append(std::numeric_limits<double>::infinity());
+				head += 9;
+			}
+			else if (json.substr(head, 3) == "NaN") {
+				arrptr->append(std::numeric_limits<double>::quiet_NaN());
+				head += 3;
+			}
+			else if (json.substr(head, 4) == "-NaN") {
+				arrptr->append(std::numeric_limits<double>::quiet_NaN());
+				head += 4;
 			}
 			else {
 				fprintf(stderr, "Error parsing JSON\n");
@@ -1192,7 +1224,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			}
 		}
 		// boolean
-		if (json[head] == 't' || json[head] == 'f') {
+		else if (json[head] == 't' || json[head] == 'f') {
 			if (json.substr(head, 4) == "true") {
 				(*objptr)[key] = true;
 				head += 4;
@@ -1200,6 +1232,30 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 			else if (json.substr(head, 5) == "false") {
 				(*objptr)[key] = false;
 				head += 5;
+			}
+			else {
+				fprintf(stderr, "Error parsing JSON\n");
+				delete objptr;
+				return NULL;
+			}
+		}
+		// number (infinity or nan)
+		else if (json[head] == 'I' || json[head] == 'N' || json.substr(head, 2) == "-I" || json.substr(head, 2) == "-N") {
+			if (json.substr(head, 8) == "Infinity") {
+				(*objptr)[key] = std::numeric_limits<double>::infinity();
+				head += 8;
+			}
+			else if (json.substr(head, 9) == "-Infinity") {
+				(*objptr)[key] = std::numeric_limits<double>::infinity();
+				head += 9;
+			}
+			else if (json.substr(head, 3) == "NaN") {
+				(*objptr)[key] = std::numeric_limits<double>::quiet_NaN();
+				head += 3;
+			}
+			else if (json.substr(head, 4) == "-NaN") {
+				(*objptr)[key] = std::numeric_limits<double>::quiet_NaN();
+				head += 4;
 			}
 			else {
 				fprintf(stderr, "Error parsing JSON\n");

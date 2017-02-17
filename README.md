@@ -15,7 +15,7 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 | multiline strings (prefix each newline with a backslash) | No                                        |
 | numbers can be hexadecimal (e.g. 0xA639ED01)             | Yes                                       |
 | numbers can begin or end with a decimal point            | Yes                                       |
-| numbers can include Infinity, -Infinity, NaN, and -NaN   | No                                        |
+| numbers can include Infinity, -Infinity, NaN, and -NaN   | Yes                                       |
 | numbers can begin with an explicit plus sign             | Yes                                       |
 | allow inline (single-line) comments                      | Yes                                       |
 | allow block (multi-line) comments                        | Yes                                       |

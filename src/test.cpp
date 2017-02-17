@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
 	jsvar obj;
 	obj["name"] = "tmarrinan";
 	obj["year"] = 2017;
-	obj["contact"] = jsobject::parse("{'phones':[\"999-999-9999\", \"012-345-6789\"],\"email\":\"me@abc123.com\",empty:null}");
+	obj["contact"] = jsobject::parse("{'phones':[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\",empty:null}");
 	obj["half"] = 0.5;
 
 	jsvar phones = obj["contact"]["phones"];

@@ -2,6 +2,8 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <limits>
+#include <cmath>
 
 #define JS_TYPE_INVALID -1
 #define JS_TYPE_NULL     0
