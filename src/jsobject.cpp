@@ -441,11 +441,11 @@ std::string jsvar::toString(bool pretty, int indent) {
 		case JS_TYPE_TEXT:
 			esctext = text;
 			start = 0;
-			escape = esctext.find_first_of("\"\'\n");
+			escape = esctext.find_first_of("\"\n");
 			while (escape != std::string::npos) {
 				esctext = esctext.substr(0, escape) + "\\" + esctext.substr(escape);
 				start = escape + 2;
-				escape = esctext.find_first_of("\"\'", start);
+				escape = esctext.find_first_of("\"\n", start);
 			}
 			result += "\"" + esctext + "\"";
 			break;

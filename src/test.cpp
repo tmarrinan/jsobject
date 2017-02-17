@@ -2,7 +2,8 @@
 #include "jsobject.h"
 
 int main(int argc, char **argv) {
-	jsvar obj;
+	jsvar obj = jsobject::parseFromFile("example.json");
+/*
 	obj["name"] = "tmarrinan";
 	obj["year"] = 2017;
 	obj["contact"] = jsobject::parse("{'phones':[\"999-999-9999\",\"012-345-6789\"],\"email\":\"me@abc123.com\",empty:null}");
@@ -29,7 +30,7 @@ int main(int argc, char **argv) {
 	bool hasFax = obj["contact"].hasProperty("fax");
 	std::cout << "'contact' has email? " << hasEmail << ", has fax? " << hasFax << std::endl;
 	std::cout << "'contact' number of phones? " << phones.length() << std::endl;
-
+*/
 	std::cout << obj.stringify(true) << std::endl;
 	
 	return 0;
