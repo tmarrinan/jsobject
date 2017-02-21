@@ -23,7 +23,7 @@ JavaScript Object Interface for C++ (Including JSON Parser / Generator)
 ### Example
 ```
 #include <iostream>
-#include "jsobject.h"
+#include "jsobject.hpp"
 
 int main(int argc, char **argv) {
     jsvar obj;
