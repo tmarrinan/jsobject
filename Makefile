@@ -10,7 +10,7 @@ BINDIR= example/bin
 OBJS= $(addprefix $(OBJDIR)/, example.o)
 EXEC= $(addprefix $(BINDIR)/, example)
 
-mkdirs := $(shell mkdir -p $(OBJDIR) $(BINDIR))
+mkdirs:= $(shell mkdir -p $(OBJDIR) $(BINDIR))
 
 
 # BUILD EVERYTHING
