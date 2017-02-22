@@ -125,6 +125,7 @@ public:
 	size_t length();
 	std::vector<std::string> keys();
 	bool hasProperty(std::string key);
+	void clear();
 	std::string stringify(bool pretty = false, int indent = 0);
 
 	static jsvar jsarray();
@@ -137,7 +138,7 @@ private:
 
 public:
 	jsarray() {};
-	~jsarray() {};
+	~jsarray();
 
 	jsvar& operator[](int index);
 	jsvar& operator[](size_t index);
@@ -164,6 +165,7 @@ public:
 	void remove(int index);
 	void remove(size_t index);
 	size_t length();
+	void clear();
 
 	std::string stringify(bool pretty = false, int indent = 0);
 
@@ -176,16 +178,17 @@ private:
 
 public:
 	jsobject() {};
-	~jsobject() {};
+	~jsobject();
 
 	jsvar& operator[](const char *key);
 	jsvar& operator[](std::string key);
 
 	void remove(const char *key);
 	void remove(std::string key);
-
 	std::vector<std::string> keys();
 	bool hasProperty(std::string key);
+	void clear();
+
 	std::string stringify(bool pretty = false, int indent = 0);
 
 	static jsvar parse(std::string json, size_t *headPtr = NULL);
@@ -959,6 +962,15 @@ bool jsvar::hasProperty(std::string key) {
 	return object->hasProperty(key);
 }
 
+void jsvar::clear() {
+	if (type == JS_TYPE_ARRAY)
+		delete array;
+	else if (type == JS_TYPE_OBJECT)
+		delete object;
+
+	type = JS_TYPE_INVALID;
+}
+
 std::string jsvar::stringify(bool pretty, int indent) {
 	if (type != JS_TYPE_ARRAY && type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type array/object\n");
@@ -981,6 +993,10 @@ jsvar jsvar::jsobject() {
 /***************************************************************
  *  public methods: jsarray                                    *
  ***************************************************************/
+
+jsarray::~jsarray() {
+	clear();
+}
 
 jsvar& jsarray::operator[](int index) {
 	return (*this)[(size_t)index];
@@ -1084,6 +1100,15 @@ void jsarray::remove(size_t index) {
 
 size_t jsarray::length() {
 	return list.size();
+}
+
+void jsarray::clear() {
+	int i, type;
+	for (i=0; i<list.size(); i++) {
+		type = list[i].getType();
+		if (type == JS_TYPE_ARRAY || type == JS_TYPE_OBJECT)
+			list[i].clear();
+	}
 }
 
 std::string jsarray::stringify(bool pretty, int indent) {
@@ -1345,6 +1370,10 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
  *  public methods: jsobject                                   *
  ***************************************************************/
 
+jsobject::~jsobject() {
+	clear();
+}
+
 jsvar& jsobject::operator[](const char *key) {
 	return (*this)[std::string(key)];
 }
@@ -1378,6 +1407,16 @@ bool jsobject::hasProperty(std::string key) {
 	if (dict.count(key) > 0)
 		return true;
 	return false;
+}
+
+void jsobject::clear() {
+	std::map<std::string,jsvar>::iterator it;
+	int type;
+	for (it = dict.begin(); it != dict.end(); it++) {
+		type = it->second.getType();
+		if (type == JS_TYPE_ARRAY || type == JS_TYPE_OBJECT)
+			it->second.clear();
+	}
 }
 
 std::string jsobject::stringify(bool pretty, int indent) {
@@ -1450,6 +1489,8 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 	}
 
 	if (json[head] != '{') {
+		if (json[head] == '[')
+			return jsarray::parse(json, &head);
 		fprintf(stderr, "Error parsing JSON\n");
 		return jsvar();
 	}
