@@ -126,6 +126,9 @@ public:
 	std::vector<std::string> keys();
 	bool hasProperty(std::string key);
 	std::string stringify(bool pretty = false, int indent = 0);
+
+	static jsvar jsarray();
+	static jsvar jsobject();
 };
 
 class jsarray {
@@ -272,12 +275,12 @@ jsvar::jsvar(std::string value) {
 	text = value;
 }
 
-jsvar::jsvar(jsarray &value) {
+jsvar::jsvar(class jsarray &value) {
 	type = JS_TYPE_ARRAY;
 	array = &value;
 }
 
-jsvar::jsvar(jsobject &value) {
+jsvar::jsvar(class jsobject &value) {
 	type = JS_TYPE_OBJECT;
 	object = &value;
 }
@@ -427,7 +430,7 @@ jsvar::operator std::string() {
 	return text;
 }
 
-jsvar::operator jsarray&() {
+jsvar::operator class jsarray&() {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
@@ -435,7 +438,7 @@ jsvar::operator jsarray&() {
 	return *array;
 }
 
-jsvar::operator jsobject&() {
+jsvar::operator class jsobject&() {
 	if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
@@ -533,13 +536,13 @@ jsvar& jsvar::operator=(std::string value) {
 	return *this;
 }
 
-jsvar& jsvar::operator=(jsarray &value) {
+jsvar& jsvar::operator=(class jsarray &value) {
 	type = JS_TYPE_ARRAY;
 	array = &value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(jsobject &value) {
+jsvar& jsvar::operator=(class jsobject &value) {
 	type = JS_TYPE_OBJECT;
 	object = &value;
 	return *this;
@@ -561,7 +564,7 @@ jsvar& jsvar::operator[](int index) {
 jsvar& jsvar::operator[](size_t index) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -577,7 +580,7 @@ jsvar& jsvar::operator[](const char *key) {
 jsvar& jsvar::operator[](std::string key) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_OBJECT;
-		object = new jsobject();
+		object = new class jsobject();
 	}
 	else if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
@@ -675,7 +678,7 @@ std::string jsvar::toString(bool pretty, int indent) {
 void jsvar::append(jsvar &value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -687,7 +690,7 @@ void jsvar::append(jsvar &value) {
 void jsvar::append(bool value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -699,7 +702,7 @@ void jsvar::append(bool value) {
 void jsvar::append(char value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -711,7 +714,7 @@ void jsvar::append(char value) {
 void jsvar::append(short value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -723,7 +726,7 @@ void jsvar::append(short value) {
 void jsvar::append(int value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -735,7 +738,7 @@ void jsvar::append(int value) {
 void jsvar::append(long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -747,7 +750,7 @@ void jsvar::append(long value) {
 void jsvar::append(long long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -759,7 +762,7 @@ void jsvar::append(long long value) {
 void jsvar::append(unsigned char value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -771,7 +774,7 @@ void jsvar::append(unsigned char value) {
 void jsvar::append(unsigned short value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -783,7 +786,7 @@ void jsvar::append(unsigned short value) {
 void jsvar::append(unsigned int value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -795,7 +798,7 @@ void jsvar::append(unsigned int value) {
 void jsvar::append(unsigned long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -807,7 +810,7 @@ void jsvar::append(unsigned long value) {
 void jsvar::append(unsigned long long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -819,7 +822,7 @@ void jsvar::append(unsigned long long value) {
 void jsvar::append(float value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -831,7 +834,7 @@ void jsvar::append(float value) {
 void jsvar::append(double value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -843,7 +846,7 @@ void jsvar::append(double value) {
 void jsvar::append(const char *value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -855,7 +858,7 @@ void jsvar::append(const char *value) {
 void jsvar::append(std::string value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -864,10 +867,10 @@ void jsvar::append(std::string value) {
 	array->append(value);
 }
 
-void jsvar::append(jsarray &value) {
+void jsvar::append(class jsarray &value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -876,10 +879,10 @@ void jsvar::append(jsarray &value) {
 	array->append(value);
 }
 
-void jsvar::append(jsobject &value) {
+void jsvar::append(class jsobject &value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -891,7 +894,7 @@ void jsvar::append(jsobject &value) {
 void jsvar::append(void *value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
-		array = new jsarray();
+		array = new class jsarray();
 	}
 	else if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
@@ -964,6 +967,14 @@ std::string jsvar::stringify(bool pretty, int indent) {
 	if (type == JS_TYPE_ARRAY)
 		return array->stringify(pretty, indent);
 	return object->stringify(pretty, indent);
+}
+
+jsvar jsvar::jsarray() {
+	return jsvar(*new class jsarray());
+}
+
+jsvar jsvar::jsobject() {
+	return jsvar(*new class jsobject());
 }
 
 
