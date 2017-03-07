@@ -1,3 +1,6 @@
+#ifndef JSOBJECT_HPP
+#define JSOBJECT_HPP
+
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -51,7 +54,7 @@ public:
 	jsvar(jsarray &value);
 	jsvar(jsobject &value);
 	jsvar(void *value);
-	~jsvar() {};
+	~jsvar();
 
 	operator bool();
 	operator char();
@@ -137,7 +140,7 @@ private:
 	std::vector<jsvar> list;
 
 public:
-	jsarray() {};
+	jsarray();
 	~jsarray();
 
 	jsvar& operator[](int index);
@@ -177,7 +180,7 @@ private:
 	std::map<std::string,jsvar> dict;
 
 public:
-	jsobject() {};
+	jsobject();
 	~jsobject();
 
 	jsvar& operator[](const char *key);
@@ -199,96 +202,96 @@ public:
 /***************************************************************
  *  public methods: jsvar                                      *
  ***************************************************************/
-jsvar::jsvar() {
+inline jsvar::jsvar() {
 	type = JS_TYPE_INVALID;
 }
 
-jsvar::jsvar(bool value) {
+inline jsvar::jsvar(bool value) {
 	type = JS_TYPE_BOOLEAN;
 	boolean = value;
 }
 
-jsvar::jsvar(char value) {
+inline jsvar::jsvar(char value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(short value) {
+inline jsvar::jsvar(short value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(int value) {
+inline jsvar::jsvar(int value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(long value) {
+inline jsvar::jsvar(long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(long long value) {
+inline jsvar::jsvar(long long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = value;
 }
 
-jsvar::jsvar(unsigned char value) {
+inline jsvar::jsvar(unsigned char value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(unsigned short value) {
+inline jsvar::jsvar(unsigned short value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(unsigned int value) {
+inline jsvar::jsvar(unsigned int value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(unsigned long value) {
+inline jsvar::jsvar(unsigned long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(unsigned long long value) {
+inline jsvar::jsvar(unsigned long long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 }
 
-jsvar::jsvar(float value) {
+inline jsvar::jsvar(float value) {
 	type = JS_TYPE_FLOAT;
 	fnumber = (double)value;
 }
 
-jsvar::jsvar(double value) {
+inline jsvar::jsvar(double value) {
 	type = JS_TYPE_FLOAT;
 	fnumber = value;
 }
 
-jsvar::jsvar(const char *value) {
+inline jsvar::jsvar(const char *value) {
 	type = JS_TYPE_TEXT;
 	text = std::string(value);
 }
 
-jsvar::jsvar(std::string value) {
+inline jsvar::jsvar(std::string value) {
 	type = JS_TYPE_TEXT;
 	text = value;
 }
 
-jsvar::jsvar(class jsarray &value) {
+inline jsvar::jsvar(class jsarray &value) {
 	type = JS_TYPE_ARRAY;
 	array = &value;
 }
 
-jsvar::jsvar(class jsobject &value) {
+inline jsvar::jsvar(class jsobject &value) {
 	type = JS_TYPE_OBJECT;
 	object = &value;
 }
 
-jsvar::jsvar(void *value) {
+inline jsvar::jsvar(void *value) {
 	if (value != NULL) {
 		fprintf(stderr, "Invalid access of jsvar type null\n");
 		exit(1);
@@ -296,7 +299,10 @@ jsvar::jsvar(void *value) {
 	type = JS_TYPE_NULL;
 }
 
-jsvar::operator bool() {
+inline jsvar::~jsvar() {
+}
+
+inline jsvar::operator bool() {
 	if (type != JS_TYPE_BOOLEAN) {
 		fprintf(stderr, "Invalid access of jsvar type boolean\n");
 		exit(1);
@@ -304,7 +310,7 @@ jsvar::operator bool() {
 	return boolean;
 }
 
-jsvar::operator char() {
+inline jsvar::operator char() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -314,7 +320,7 @@ jsvar::operator char() {
 	return (char)fnumber;
 }
 
-jsvar::operator short() {
+inline jsvar::operator short() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -324,7 +330,7 @@ jsvar::operator short() {
 	return (short)fnumber;
 }
 
-jsvar::operator int() {
+inline jsvar::operator int() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -334,7 +340,7 @@ jsvar::operator int() {
 	return (int)fnumber;
 }
 
-jsvar::operator long() {
+inline jsvar::operator long() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -344,7 +350,7 @@ jsvar::operator long() {
 	return (long)fnumber;
 }
 
-jsvar::operator long long() {
+inline jsvar::operator long long() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -354,7 +360,7 @@ jsvar::operator long long() {
 	return (long long)fnumber;
 }
 
-jsvar::operator unsigned char() {
+inline jsvar::operator unsigned char() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -364,7 +370,7 @@ jsvar::operator unsigned char() {
 	return (unsigned char)fnumber;
 }
 
-jsvar::operator unsigned short() {
+inline jsvar::operator unsigned short() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -374,7 +380,7 @@ jsvar::operator unsigned short() {
 	return (unsigned short)fnumber;
 }
 
-jsvar::operator unsigned int() {
+inline jsvar::operator unsigned int() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -384,7 +390,7 @@ jsvar::operator unsigned int() {
 	return (unsigned int)fnumber;
 }
 
-jsvar::operator unsigned long() {
+inline jsvar::operator unsigned long() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -394,7 +400,7 @@ jsvar::operator unsigned long() {
 	return (unsigned long)fnumber;
 }
 
-jsvar::operator unsigned long long() {
+inline jsvar::operator unsigned long long() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -404,7 +410,7 @@ jsvar::operator unsigned long long() {
 	return (unsigned long long)fnumber;
 }
 
-jsvar::operator float() {
+inline jsvar::operator float() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -415,7 +421,7 @@ jsvar::operator float() {
 	return (float)fnumber;
 }
 
-jsvar::operator double() {
+inline jsvar::operator double() {
 	if (type != JS_TYPE_INTEGER && type != JS_TYPE_FLOAT) {
 		fprintf(stderr, "Invalid access of jsvar type number\n");
 		exit(1);
@@ -425,7 +431,7 @@ jsvar::operator double() {
 	return fnumber;
 }
 
-jsvar::operator std::string() {
+inline jsvar::operator std::string() {
 	if (type != JS_TYPE_TEXT) {
 		fprintf(stderr, "Invalid access of jsvar type text\n");
 		exit(1);
@@ -433,7 +439,7 @@ jsvar::operator std::string() {
 	return text;
 }
 
-jsvar::operator class jsarray&() {
+inline jsvar::operator class jsarray&() {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
@@ -441,7 +447,7 @@ jsvar::operator class jsarray&() {
 	return *array;
 }
 
-jsvar::operator class jsobject&() {
+inline jsvar::operator class jsobject&() {
 	if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
@@ -449,109 +455,109 @@ jsvar::operator class jsobject&() {
 	return *object;
 }
 
-jsvar& jsvar::operator=(bool value) {
+inline jsvar& jsvar::operator=(bool value) {
 	type = JS_TYPE_BOOLEAN;
 	boolean = value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(char value) {
+inline jsvar& jsvar::operator=(char value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(short value) {
+inline jsvar& jsvar::operator=(short value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(int value) {
+inline jsvar& jsvar::operator=(int value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(long value) {
+inline jsvar& jsvar::operator=(long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(long long value) {
+inline jsvar& jsvar::operator=(long long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(unsigned char value) {
+inline jsvar& jsvar::operator=(unsigned char value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(unsigned short value) {
+inline jsvar& jsvar::operator=(unsigned short value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(unsigned int value) {
+inline jsvar& jsvar::operator=(unsigned int value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(unsigned long value) {
+inline jsvar& jsvar::operator=(unsigned long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(unsigned long long value) {
+inline jsvar& jsvar::operator=(unsigned long long value) {
 	type = JS_TYPE_INTEGER;
 	inumber = (long long)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(float value) {
+inline jsvar& jsvar::operator=(float value) {
 	type = JS_TYPE_FLOAT;
 	fnumber = (double)value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(double value) {
+inline jsvar& jsvar::operator=(double value) {
 	type = JS_TYPE_FLOAT;
 	fnumber = value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(const char *value) {
+inline jsvar& jsvar::operator=(const char *value) {
 	type = JS_TYPE_TEXT;
 	text = std::string(value);
 	return *this;
 }
 
-jsvar& jsvar::operator=(std::string value) {
+inline jsvar& jsvar::operator=(std::string value) {
 	type = JS_TYPE_TEXT;
 	text = value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(class jsarray &value) {
+inline jsvar& jsvar::operator=(class jsarray &value) {
 	type = JS_TYPE_ARRAY;
 	array = &value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(class jsobject &value) {
+inline jsvar& jsvar::operator=(class jsobject &value) {
 	type = JS_TYPE_OBJECT;
 	object = &value;
 	return *this;
 }
 
-jsvar& jsvar::operator=(void *value) {
+inline jsvar& jsvar::operator=(void *value) {
 	if (value != NULL) {
 		fprintf(stderr, "Invalid access of jsvar type null\n");
 		exit(1);
@@ -560,11 +566,11 @@ jsvar& jsvar::operator=(void *value) {
 	return *this;
 }
 
-jsvar& jsvar::operator[](int index) {
+inline jsvar& jsvar::operator[](int index) {
 	return (*this)[(size_t)index];
 }
 
-jsvar& jsvar::operator[](size_t index) {
+inline jsvar& jsvar::operator[](size_t index) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -576,11 +582,11 @@ jsvar& jsvar::operator[](size_t index) {
 	return (*array)[index];
 }
 
-jsvar& jsvar::operator[](const char *key) {
+inline jsvar& jsvar::operator[](const char *key) {
 	return (*this)[std::string(key)];
 }
 
-jsvar& jsvar::operator[](std::string key) {
+inline jsvar& jsvar::operator[](std::string key) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_OBJECT;
 		object = new class jsobject();
@@ -592,7 +598,7 @@ jsvar& jsvar::operator[](std::string key) {
 	return (*object)[key];
 }
 
-std::ostream &operator<<(std::ostream &output, jsvar &var) {
+inline std::ostream &operator<<(std::ostream &output, jsvar &var) {
 	if (var.type == JS_TYPE_TEXT)
 		output << var.text;
 	else
@@ -601,11 +607,11 @@ std::ostream &operator<<(std::ostream &output, jsvar &var) {
 	return output;
 }
 
-int jsvar::getType() {
+inline int jsvar::getType() {
 	return type;
 }
 
-std::string jsvar::toString(bool pretty, int indent) {
+inline std::string jsvar::toString(bool pretty, int indent) {
 	size_t pos, start, escape;
 	char escchar;
 	char canum[64];
@@ -678,7 +684,7 @@ std::string jsvar::toString(bool pretty, int indent) {
 	return result;
 }
 
-void jsvar::append(jsvar &value) {
+inline void jsvar::append(jsvar &value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -690,7 +696,7 @@ void jsvar::append(jsvar &value) {
 	array->append(value);
 }
 
-void jsvar::append(bool value) {
+inline void jsvar::append(bool value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -702,7 +708,7 @@ void jsvar::append(bool value) {
 	array->append(value);
 }
 
-void jsvar::append(char value) {
+inline void jsvar::append(char value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -714,7 +720,7 @@ void jsvar::append(char value) {
 	array->append(value);
 }
 
-void jsvar::append(short value) {
+inline void jsvar::append(short value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -726,7 +732,7 @@ void jsvar::append(short value) {
 	array->append(value);
 }
 
-void jsvar::append(int value) {
+inline void jsvar::append(int value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -738,7 +744,7 @@ void jsvar::append(int value) {
 	array->append(value);
 }
 
-void jsvar::append(long value) {
+inline void jsvar::append(long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -750,7 +756,7 @@ void jsvar::append(long value) {
 	array->append(value);
 }
 
-void jsvar::append(long long value) {
+inline void jsvar::append(long long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -762,7 +768,7 @@ void jsvar::append(long long value) {
 	array->append(value);
 }
 
-void jsvar::append(unsigned char value) {
+inline void jsvar::append(unsigned char value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -774,7 +780,7 @@ void jsvar::append(unsigned char value) {
 	array->append(value);
 }
 
-void jsvar::append(unsigned short value) {
+inline void jsvar::append(unsigned short value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -786,7 +792,7 @@ void jsvar::append(unsigned short value) {
 	array->append(value);
 }
 
-void jsvar::append(unsigned int value) {
+inline void jsvar::append(unsigned int value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -798,7 +804,7 @@ void jsvar::append(unsigned int value) {
 	array->append(value);
 }
 
-void jsvar::append(unsigned long value) {
+inline void jsvar::append(unsigned long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -810,7 +816,7 @@ void jsvar::append(unsigned long value) {
 	array->append(value);
 }
 
-void jsvar::append(unsigned long long value) {
+inline void jsvar::append(unsigned long long value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -822,7 +828,7 @@ void jsvar::append(unsigned long long value) {
 	array->append(value);
 }
 
-void jsvar::append(float value) {
+inline void jsvar::append(float value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -834,7 +840,7 @@ void jsvar::append(float value) {
 	array->append(value);
 }
 
-void jsvar::append(double value) {
+inline void jsvar::append(double value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -846,7 +852,7 @@ void jsvar::append(double value) {
 	array->append(value);
 }
 
-void jsvar::append(const char *value) {
+inline void jsvar::append(const char *value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -858,7 +864,7 @@ void jsvar::append(const char *value) {
 	array->append(value);
 }
 
-void jsvar::append(std::string value) {
+inline void jsvar::append(std::string value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -870,7 +876,7 @@ void jsvar::append(std::string value) {
 	array->append(value);
 }
 
-void jsvar::append(class jsarray &value) {
+inline void jsvar::append(class jsarray &value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -882,7 +888,7 @@ void jsvar::append(class jsarray &value) {
 	array->append(value);
 }
 
-void jsvar::append(class jsobject &value) {
+inline void jsvar::append(class jsobject &value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -894,7 +900,7 @@ void jsvar::append(class jsobject &value) {
 	array->append(value);
 }
 
-void jsvar::append(void *value) {
+inline void jsvar::append(void *value) {
 	if (type == JS_TYPE_INVALID) {
 		type = JS_TYPE_ARRAY;
 		array = new class jsarray();
@@ -906,7 +912,7 @@ void jsvar::append(void *value) {
 	array->append(value);
 }
 
-void jsvar::remove(int index) {
+inline void jsvar::remove(int index) {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
@@ -914,7 +920,7 @@ void jsvar::remove(int index) {
 	array->remove((size_t)index);
 }
 
-void jsvar::remove(size_t index) {
+inline void jsvar::remove(size_t index) {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
@@ -922,7 +928,7 @@ void jsvar::remove(size_t index) {
 	array->remove(index);
 }
 
-void jsvar::remove(const char *key) {
+inline void jsvar::remove(const char *key) {
 	if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
@@ -930,7 +936,7 @@ void jsvar::remove(const char *key) {
 	object->remove(std::string(key));
 }
 
-void jsvar::remove(std::string key) {
+inline void jsvar::remove(std::string key) {
 	if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
@@ -938,7 +944,7 @@ void jsvar::remove(std::string key) {
 	object->remove(key);
 }
 
-size_t jsvar::length() {
+inline size_t jsvar::length() {
 	if (type != JS_TYPE_ARRAY) {
 		fprintf(stderr, "Invalid access of jsvar type array\n");
 		exit(1);
@@ -946,7 +952,7 @@ size_t jsvar::length() {
 	return array->length();
 }
 
-std::vector<std::string> jsvar::keys() {
+inline std::vector<std::string> jsvar::keys() {
 	if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
@@ -954,7 +960,7 @@ std::vector<std::string> jsvar::keys() {
 	return object->keys();
 }
 
-bool jsvar::hasProperty(std::string key) {
+inline bool jsvar::hasProperty(std::string key) {
 	if (type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type object\n");
 		exit(1);
@@ -962,7 +968,7 @@ bool jsvar::hasProperty(std::string key) {
 	return object->hasProperty(key);
 }
 
-void jsvar::clear() {
+inline void jsvar::clear() {
 	if (type == JS_TYPE_ARRAY)
 		delete array;
 	else if (type == JS_TYPE_OBJECT)
@@ -971,7 +977,7 @@ void jsvar::clear() {
 	type = JS_TYPE_INVALID;
 }
 
-std::string jsvar::stringify(bool pretty, int indent) {
+inline std::string jsvar::stringify(bool pretty, int indent) {
 	if (type != JS_TYPE_ARRAY && type != JS_TYPE_OBJECT) {
 		fprintf(stderr, "Invalid access of jsvar type array/object\n");
 		exit(1);
@@ -981,11 +987,11 @@ std::string jsvar::stringify(bool pretty, int indent) {
 	return object->stringify(pretty, indent);
 }
 
-jsvar jsvar::jsarray() {
+inline jsvar jsvar::jsarray() {
 	return jsvar(*new class jsarray());
 }
 
-jsvar jsvar::jsobject() {
+inline jsvar jsvar::jsobject() {
 	return jsvar(*new class jsobject());
 }
 
@@ -994,15 +1000,18 @@ jsvar jsvar::jsobject() {
  *  public methods: jsarray                                    *
  ***************************************************************/
 
-jsarray::~jsarray() {
+inline jsarray::jsarray() {
+}
+
+inline jsarray::~jsarray() {
 	clear();
 }
 
-jsvar& jsarray::operator[](int index) {
+inline jsvar& jsarray::operator[](int index) {
 	return (*this)[(size_t)index];
 }
 
-jsvar& jsarray::operator[](size_t index) {
+inline jsvar& jsarray::operator[](size_t index) {
 	if (index >= list.size()) {
 		fprintf(stderr, "Invalid access of jsarray: index out of bounds\n");
 		exit(1);
@@ -1010,87 +1019,87 @@ jsvar& jsarray::operator[](size_t index) {
 	return list[index];
 }
 
-void jsarray::append(jsvar &value) {
+inline void jsarray::append(jsvar &value) {
 	list.push_back(value);
 }
 
-void jsarray::append(bool value) {
+inline void jsarray::append(bool value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(char value) {
+inline void jsarray::append(char value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(short value) {
+inline void jsarray::append(short value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(int value) {
+inline void jsarray::append(int value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(long value) {
+inline void jsarray::append(long value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(long long value) {
+inline void jsarray::append(long long value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(unsigned char value) {
+inline void jsarray::append(unsigned char value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(unsigned short value) {
+inline void jsarray::append(unsigned short value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(unsigned int value) {
+inline void jsarray::append(unsigned int value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(unsigned long value) {
+inline void jsarray::append(unsigned long value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(unsigned long long value) {
+inline void jsarray::append(unsigned long long value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(float value) {
+inline void jsarray::append(float value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(double value) {
+inline void jsarray::append(double value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(const char *value) {
+inline void jsarray::append(const char *value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(std::string value) {
+inline void jsarray::append(std::string value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(jsarray &value) {
+inline void jsarray::append(jsarray &value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(jsobject &value) {
+inline void jsarray::append(jsobject &value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::append(void *value) {
+inline void jsarray::append(void *value) {
 	list.push_back(jsvar(value));
 }
 
-void jsarray::remove(int index) {
+inline void jsarray::remove(int index) {
 	remove((size_t)index);
 }
 
-void jsarray::remove(size_t index) {
+inline void jsarray::remove(size_t index) {
 	if (index >= list.size()) {
 		fprintf(stderr, "Invalid access of jsarray: index out of bounds\n");
 		exit(1);
@@ -1098,11 +1107,11 @@ void jsarray::remove(size_t index) {
 	list.erase(list.begin()+index);
 }
 
-size_t jsarray::length() {
+inline size_t jsarray::length() {
 	return list.size();
 }
 
-void jsarray::clear() {
+inline void jsarray::clear() {
 	int i, type;
 	for (i=0; i<list.size(); i++) {
 		type = list[i].getType();
@@ -1111,7 +1120,7 @@ void jsarray::clear() {
 	}
 }
 
-std::string jsarray::stringify(bool pretty, int indent) {
+inline std::string jsarray::stringify(bool pretty, int indent) {
 	int i;
 	char pad[128];
 	std::string padding = "";
@@ -1145,7 +1154,7 @@ std::string jsarray::stringify(bool pretty, int indent) {
 	return result;
 }
 
-jsvar jsarray::parse(std::string json, size_t *headPtr) {
+inline jsvar jsarray::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
 
@@ -1370,29 +1379,32 @@ jsvar jsarray::parse(std::string json, size_t *headPtr) {
  *  public methods: jsobject                                   *
  ***************************************************************/
 
-jsobject::~jsobject() {
+inline jsobject::jsobject() {
+}
+
+inline jsobject::~jsobject() {
 	clear();
 }
 
-jsvar& jsobject::operator[](const char *key) {
+inline jsvar& jsobject::operator[](const char *key) {
 	return (*this)[std::string(key)];
 }
 
-jsvar& jsobject::operator[](std::string key) {
+inline jsvar& jsobject::operator[](std::string key) {
 	if (dict.count(key) <= 0)
 		dict[key] = jsvar();
 	return dict[key];
 }
 
-void jsobject::remove(const char *key) {
+inline void jsobject::remove(const char *key) {
 	remove(std::string(key));
 }
 
-void jsobject::remove(std::string key) {
+inline void jsobject::remove(std::string key) {
 	dict.erase(key);
 }
 
-std::vector<std::string> jsobject::keys() {
+inline std::vector<std::string> jsobject::keys() {
 	std::map<std::string,jsvar>::iterator it;
 	std::vector<std::string> result;
 
@@ -1403,13 +1415,13 @@ std::vector<std::string> jsobject::keys() {
 	return result;
 }
 
-bool jsobject::hasProperty(std::string key) {
+inline bool jsobject::hasProperty(std::string key) {
 	if (dict.count(key) > 0)
 		return true;
 	return false;
 }
 
-void jsobject::clear() {
+inline void jsobject::clear() {
 	std::map<std::string,jsvar>::iterator it;
 	int type;
 	for (it = dict.begin(); it != dict.end(); it++) {
@@ -1419,7 +1431,7 @@ void jsobject::clear() {
 	}
 }
 
-std::string jsobject::stringify(bool pretty, int indent) {
+inline std::string jsobject::stringify(bool pretty, int indent) {
 	std::map<std::string,jsvar>::iterator it;
 	char pad[128];
 	size_t start, escape;
@@ -1470,7 +1482,7 @@ std::string jsobject::stringify(bool pretty, int indent) {
 	return result;
 }
 
-jsvar jsobject::parse(std::string json, size_t *headPtr) {
+inline jsvar jsobject::parse(std::string json, size_t *headPtr) {
 	size_t begin = (headPtr == NULL) ? 0 : *headPtr;
 	size_t head = json.find_first_not_of(" \t\r\n", begin);
 
@@ -1725,7 +1737,7 @@ jsvar jsobject::parse(std::string json, size_t *headPtr) {
 	return jsvar(*objptr);
 }
 
-jsvar jsobject::parseFromFile(std::string filename) {
+inline jsvar jsobject::parseFromFile(std::string filename) {
 	FILE *f = fopen(filename.c_str(), "rb");
 	if (f == NULL) {
 		fprintf(stderr, "Error opening file %s\n", filename.c_str());
@@ -1745,3 +1757,5 @@ jsvar jsobject::parseFromFile(std::string filename) {
 
 	return parse(text);
 }
+
+#endif // JSOBJECT_HPP
