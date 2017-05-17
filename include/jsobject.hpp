@@ -31,8 +31,8 @@ private:
 	long long inumber;
 	double fnumber;
 	std::string text;
-	jsarray *array;
-	jsobject *object;
+	class jsarray *array;
+	class jsobject *object;
 
 public:
 	jsvar();
@@ -51,8 +51,8 @@ public:
 	jsvar(double value);
 	jsvar(const char *value);
 	jsvar(std::string value);
-	jsvar(jsarray &value);
-	jsvar(jsobject &value);
+	jsvar(class jsarray &value);
+	jsvar(class jsobject &value);
 	jsvar(void *value);
 	~jsvar();
 
@@ -70,8 +70,8 @@ public:
 	operator float();
 	operator double();
 	operator std::string();
-	operator jsarray&();
-	operator jsobject&();
+	operator class jsarray&();
+	operator class jsobject&();
 
 	jsvar& operator=(bool value);
 	jsvar& operator=(char value);
@@ -88,8 +88,8 @@ public:
 	jsvar& operator=(double value);
 	jsvar& operator=(const char *value);
 	jsvar& operator=(std::string value);
-	jsvar& operator=(jsarray &value);
-	jsvar& operator=(jsobject &value);
+	jsvar& operator=(class jsarray &value);
+	jsvar& operator=(class jsobject &value);
 	jsvar& operator=(void *value);
 
 	jsvar& operator[](int index);
@@ -118,8 +118,8 @@ public:
 	void append(double value);
 	void append(const char *value);
 	void append(std::string value);
-	void append(jsarray &value);
-	void append(jsobject &value);
+	void append(class jsarray &value);
+	void append(class jsobject &value);
 	void append(void *value);
 	void remove(int index);
 	void remove(size_t index);
